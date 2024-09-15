@@ -1,0 +1,77 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Address {
+  id           String   @id @default(cuid())
+  idClient     String?
+  idResale     String? 
+  state        String
+  city         String
+  neighborhood String
+  publicPlace  String
+  number       String
+  ie           String?
+  client       Client?  @relation(fields: [idClient], references: [id])
+  resale       Resale?  
+
+  @@map("addresses")
+}
+
+model Client {
+  id        String     @id @default(cuid())
+  name      String
+  phone     String
+  cpfcnpj   String
+  addresses Address[]
+  devices   Device[]
+  resaleId  String?     
+  resale    Resale?     @relation(fields: [resaleId], references: [id])
+
+  @@map("clients")
+}
+
+model Device {
+  id        String  @id @default(cuid())
+  idClient  String
+  idResale  String
+  tare      Float
+  weight    Float
+  gas       Float
+  client    Client  @relation(fields: [idClient], references: [id])
+  resale    Resale  @relation(fields: [idResale], references: [id])
+  signals   Signal[]
+
+  @@map("devices")
+}
+
+model Resale {
+  id        String   @id @default(cuid())
+  name      String
+  phone     String
+  cpfcnpj   String
+  address   Address  @relation(fields: [addressId], references: [id])
+  addressId String   @unique 
+  clients   Client[] 
+  devices   Device[]
+
+  @@map("resales")
+}
+
+model Signal {
+  id          String   @id @default(cuid())
+  idDevice    String
+  date        DateTime @default(now())
+  isFinished  Boolean
+  device      Device   @relation(fields: [idDevice], references: [id])
+
+  @@map("signals")
+}
