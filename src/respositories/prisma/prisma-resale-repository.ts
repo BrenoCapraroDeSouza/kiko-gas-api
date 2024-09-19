@@ -18,4 +18,14 @@ export class PrismaResaleRepository implements ResaleRepository {
       },
     });
   }
+
+  async update(id:string, data: Prisma.ResaleUpdateInput): Promise<Resale | null> {
+    const resale =  await prisma.resale.update({
+      where: {
+        id,
+      },
+      data,
+    });
+    return resale;
+  }
 }
