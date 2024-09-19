@@ -2,6 +2,7 @@ import { FastifyReply, FastifyRequest } from "fastify";
 import { PrismaResaleRepository } from "../../../respositories/prisma/prisma-resale-repository";
 import { z } from "zod";
 import { RegisterService } from "../../../service/resale/register-service";
+import { makeRegisterService } from "../../../service/resale/factories/make-register-service";
 
 export async function register(
   request: FastifyRequest,
@@ -26,7 +27,7 @@ export async function register(
   const { name, address, cpfcnpj, email, password, phone } =
     registerBodySchema.parse(request.body);
 
-  const registerService = new RegisterService(new PrismaResaleRepository());
+  const registerService = makeRegisterService();
 
   try {
     const { resale } = await registerService.execute({
