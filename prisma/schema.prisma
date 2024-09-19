@@ -55,6 +55,8 @@ model Device {
 
 model Resale {
   id        String   @id @default(cuid())
+  email     String
+  password  String
   name      String
   phone     String
   cpfcnpj   String
