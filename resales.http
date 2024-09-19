@@ -1,0 +1,17 @@
+POST http://localhost:3000/resales HTTP/1.1
+Content-Type: application/json
+{
+  "name": "John Doe",
+  "phone": "1234567890",
+  "cpfcnpj": "12345678901",
+  "email": "johndoe@example.com",
+  "password": "securepassword",
+  "address": {
+    "state": "SP",
+    "city": "São Paulo",
+    "neighborhood": "Centro",
+    "publicPlace": "Rua Exemplo",
+    "number": "123",
+    "ie": "123456789"
+  }
+}
