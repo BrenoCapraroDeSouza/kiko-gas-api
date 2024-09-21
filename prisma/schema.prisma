@@ -10,10 +10,28 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+// for postgreSQL
+// enum UserType {
+//   CLIENT
+//   RESALE
+// }
+
+model User { 
+  id        String   @id @default(cuid())
+  email     String   @unique
+  password  String
+  userType String
+  
+  Resale Resale?
+  Client Client?
+
+  @@map("users")
+}
+
 model Address {
   id           String   @id @default(cuid())
-  idClient     String?
-  idResale     String? 
+  idClient     String? @unique
+  idResale     String? @unique
   state        String
   city         String
   neighborhood String
@@ -21,21 +39,22 @@ model Address {
   number       String
   ie           String?
   client       Client?  @relation(fields: [idClient], references: [id])
-  resale       Resale?  
+  resale       Resale?
 
   @@map("addresses")
 }
 
 model Client {
   id        String     @id @default(cuid())
+  resaleId  String?     @unique  
+  userId    String      @unique
   name      String
   phone     String
   cpfcnpj   String
   addresses Address[]
   devices   Device[]
-  resaleId  String?     
   resale    Resale?     @relation(fields: [resaleId], references: [id])
-
+  user      User        @relation(fields: [userId], references: [id])
   @@map("clients")
 }
 
@@ -46,24 +65,24 @@ model Device {
   tare      Float
   weight    Float
   gas       Float
+  signals   Signal[]
   client    Client  @relation(fields: [idClient], references: [id])
   resale    Resale  @relation(fields: [idResale], references: [id])
-  signals   Signal[]
 
   @@map("devices")
 }
 
 model Resale {
   id        String   @id @default(cuid())
-  email     String
-  password  String
+  userId   String   @unique
+  addressId String   @unique 
   name      String
   phone     String
   cpfcnpj   String
-  address   Address  @relation(fields: [addressId], references: [id])
-  addressId String   @unique 
   clients   Client[] 
   devices   Device[]
+  address   Address  @relation(fields: [addressId], references: [id])
+  user     User     @relation(fields: [userId], references: [id])
 
   @@map("resales")
 }
