@@ -1,4 +1,4 @@
-import { PrismaResaleRepository } from "../../../respositories/prisma/prisma-resale-repository";
+import { PrismaResaleRepository } from "../../../respositories/prisma/prisma-resales-repository";
 import { UpdateService } from "../update-service";
 
 export function makeUpdateService() {
