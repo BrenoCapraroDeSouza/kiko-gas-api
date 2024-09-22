@@ -10,6 +10,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@fastify/cookie": "^10.0.0",
+    "@fastify/jwt": "^9.0.0",
     "@prisma/client": "^5.19.1",
     "bcryptjs": "^2.4.3",
     "fastify": "^4.28.1",
