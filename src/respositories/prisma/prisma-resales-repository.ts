@@ -1,5 +1,5 @@
 import { Prisma, Resale } from "@prisma/client";
-import { ResaleRepository } from "../resale-repository";
+import { ResaleRepository } from "../resales-repository";
 import { prisma } from "../../lib/prisma";
 
 export class PrismaResaleRepository implements ResaleRepository {
@@ -19,8 +19,11 @@ export class PrismaResaleRepository implements ResaleRepository {
     });
   }
 
-  async update(id:string, data: Prisma.ResaleUpdateInput): Promise<Resale | null> {
-    const resale =  await prisma.resale.update({
+  async update(
+    id: string,
+    data: Prisma.ResaleUpdateInput
+  ): Promise<Resale | null> {
+    const resale = await prisma.resale.update({
       where: {
         id,
       },

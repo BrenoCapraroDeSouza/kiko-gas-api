@@ -1,5 +1,7 @@
 import { Resale } from "@prisma/client";
-import { ResaleRepository } from "../../respositories/resale-repository";
+import { ResaleRepository } from "../../respositories/resales-repository";
+import { UsersRepository } from "../../respositories/users-repository";
+import { hash } from "bcryptjs";
 
 interface RegisterServiceRequest {
   name: string;
@@ -22,17 +24,35 @@ interface RegisterServiceResponse {
 }
 
 export class RegisterService {
-  constructor(private repository: ResaleRepository) {}
+  constructor(
+    private resaleRepository: ResaleRepository,
+    private userRepository: UsersRepository
+  ) {}
 
   async execute(
     data: RegisterServiceRequest
   ): Promise<RegisterServiceResponse> {
-    const resale = await this.repository.create({
+    const password_hash = await hash(data.password, 6);
+
+    const userWithSameEmail = await this.userRepository.findByEmail(data.email);
+
+    if (userWithSameEmail) {
+      throw new Error("User already exists");
+    }
+
+    const user = await this.userRepository.create({
+      email: data.email,
+      password: password_hash,
+      userType: "RESALE",
+    });
+
+    const resale = await this.resaleRepository.create({
       name: data.name,
       phone: data.phone,
       cpfcnpj: data.cpfcnpj,
-      email: data.email,
-      password: data.password,
+      user: {
+        connect: { id: user.id },
+      },
       address: {
         create: {
           state: data.address.state,
