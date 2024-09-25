@@ -6,7 +6,7 @@ import { hash } from "bcryptjs";
 interface RegisterServiceRequest {
   name: string;
   phone: string;
-  cpfcnpj: string;
+  cnpj: string;
   email: string;
   password: string;
   address: {
@@ -49,7 +49,7 @@ export class RegisterService {
     const resale = await this.resaleRepository.create({
       name: data.name,
       phone: data.phone,
-      cpfcnpj: data.cpfcnpj,
+      cnpj: data.cnpj,
       user: {
         connect: { id: user.id },
       },
