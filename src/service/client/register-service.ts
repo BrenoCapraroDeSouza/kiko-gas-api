@@ -2,6 +2,7 @@ import { Client } from "@prisma/client";
 import { UsersRepository } from "../../respositories/users-repository";
 import { hash } from "bcryptjs";
 import { ClientsRepository } from "../../respositories/clients-repository";
+import { ResaleRepository } from "../../respositories/resales-repository";
 
 interface RegisterServiceRequest {
   name: string;
@@ -9,6 +10,7 @@ interface RegisterServiceRequest {
   cpfcnpj: string;
   phone: string;
   password: string;
+  resaleId: string;
 }
 
 interface RegisterServiceResponse {
@@ -18,6 +20,7 @@ interface RegisterServiceResponse {
 export class RegisterService {
   constructor(
     private clientsRepository: ClientsRepository,
+    private resalesRepository: ResaleRepository,
     private userRepository: UsersRepository
   ) {}
 
@@ -27,6 +30,12 @@ export class RegisterService {
     const password_hash = await hash(data.password, 6);
 
     const userWithSameEmail = await this.userRepository.findByEmail(data.email);
+
+    const resale = await this.resalesRepository.findByUserId(data.resaleId);
+
+    if (!resale) {
+      throw new Error("Resale not found");
+    }
 
     if (userWithSameEmail) {
       throw new Error("User already exists");
@@ -42,6 +51,9 @@ export class RegisterService {
       name: data.name,
       phone: data.phone,
       cpfcnpj: data.cpfcnpj,
+      resale: {
+        connect: { id: resale.id },
+      },
       user: {
         connect: { id: user.id },
       },
