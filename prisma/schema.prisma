@@ -78,7 +78,7 @@ model Resale {
   addressId String   @unique 
   name      String
   phone     String
-  cpfcnpj   String
+  cnpj   String
   clients   Client[] 
   devices   Device[]
   address   Address  @relation(fields: [addressId], references: [id])

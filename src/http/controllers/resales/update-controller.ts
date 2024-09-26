@@ -10,7 +10,7 @@ export async function update(request: FastifyRequest, response: FastifyReply) {
   const updateBodySchema = z.object({
     name: z.string().optional(),
     phone: z.string().optional(),
-    cpfcnpj: z.string().optional(),
+    cnpj: z.string().optional(),
     email: z.string().email().optional(),
     password: z.string().optional(),
     address: z
@@ -27,7 +27,7 @@ export async function update(request: FastifyRequest, response: FastifyReply) {
 
   const { id } = updateParamsSchema.parse(request.params);
 
-  const { name, phone, cpfcnpj, email, password, address } =
+  const { name, phone, cnpj, email, password, address } =
     updateBodySchema.parse(request.body);
 
   const updateService = makeUpdateService();
@@ -37,7 +37,7 @@ export async function update(request: FastifyRequest, response: FastifyReply) {
       id,
       name,
       phone,
-      cpfcnpj,
+      cnpj,
       email,
       password,
       address,

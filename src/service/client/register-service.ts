@@ -1,31 +1,26 @@
-import { Resale } from "@prisma/client";
-import { ResaleRepository } from "../../respositories/resales-repository";
+import { Client } from "@prisma/client";
 import { UsersRepository } from "../../respositories/users-repository";
 import { hash } from "bcryptjs";
+import { ClientsRepository } from "../../respositories/clients-repository";
+import { ResaleRepository } from "../../respositories/resales-repository";
 
 interface RegisterServiceRequest {
   name: string;
-  phone: string;
-  cnpj: string;
   email: string;
+  cpfcnpj: string;
+  phone: string;
   password: string;
-  address: {
-    state: string;
-    city: string;
-    neighborhood: string;
-    publicPlace: string;
-    number: string;
-    ie?: string;
-  };
+  resaleId: string;
 }
 
 interface RegisterServiceResponse {
-  resale: Resale;
+  client: Client;
 }
 
 export class RegisterService {
   constructor(
-    private resaleRepository: ResaleRepository,
+    private clientsRepository: ClientsRepository,
+    private resalesRepository: ResaleRepository,
     private userRepository: UsersRepository
   ) {}
 
@@ -36,6 +31,12 @@ export class RegisterService {
 
     const userWithSameEmail = await this.userRepository.findByEmail(data.email);
 
+    const resale = await this.resalesRepository.findByUserId(data.resaleId);
+
+    if (!resale) {
+      throw new Error("Resale not found");
+    }
+
     if (userWithSameEmail) {
       throw new Error("User already exists");
     }
@@ -43,28 +44,21 @@ export class RegisterService {
     const user = await this.userRepository.create({
       email: data.email,
       password: password_hash,
-      userType: "RESALE",
+      userType: "CLIENT",
     });
 
-    const resale = await this.resaleRepository.create({
+    const client = await this.clientsRepository.create({
       name: data.name,
       phone: data.phone,
-      cnpj: data.cnpj,
+      cpfcnpj: data.cpfcnpj,
+      resale: {
+        connect: { id: resale.id },
+      },
       user: {
         connect: { id: user.id },
       },
-      address: {
-        create: {
-          state: data.address.state,
-          city: data.address.city,
-          neighborhood: data.address.neighborhood,
-          publicPlace: data.address.publicPlace,
-          number: data.address.number,
-          ie: data.address.ie,
-        },
-      },
     });
 
-    return { resale };
+    return { client };
   }
 }

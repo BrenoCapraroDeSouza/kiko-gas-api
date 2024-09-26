@@ -5,7 +5,7 @@ interface UpdateServiceRequest {
   id: string;
   name?: string;
   phone?: string;
-  cpfcnpj?: string;
+  cnpj?: string;
   email?: string;
   password?: string;
   address?: {
@@ -29,7 +29,7 @@ export class UpdateService {
     const resale = await this.repository.update(data.id, {
       name: data.name,
       phone: data.phone,
-      cpfcnpj: data.cpfcnpj,
+      cnpj: data.cnpj,
       address: data.address
         ? {
             update: {

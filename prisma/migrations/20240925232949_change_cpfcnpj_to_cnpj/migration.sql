@@ -1,11 +1,13 @@
 /*
   Warnings:
 
+  - You are about to drop the column `cpfcnpj` on the `resales` table. All the data in the column will be lost.
   - You are about to drop the column `email` on the `resales` table. All the data in the column will be lost.
   - You are about to drop the column `password` on the `resales` table. All the data in the column will be lost.
   - A unique constraint covering the columns `[idClient]` on the table `addresses` will be added. If there are existing duplicate values, this will fail.
   - A unique constraint covering the columns `[idResale]` on the table `addresses` will be added. If there are existing duplicate values, this will fail.
   - Added the required column `userId` to the `clients` table without a default value. This is not possible if the table is not empty.
+  - Added the required column `cnpj` to the `resales` table without a default value. This is not possible if the table is not empty.
   - Added the required column `userId` to the `resales` table without a default value. This is not possible if the table is not empty.
 
 */
@@ -41,11 +43,11 @@ CREATE TABLE "new_resales" (
     "addressId" TEXT NOT NULL,
     "name" TEXT NOT NULL,
     "phone" TEXT NOT NULL,
-    "cpfcnpj" TEXT NOT NULL,
+    "cnpj" TEXT NOT NULL,
     CONSTRAINT "resales_addressId_fkey" FOREIGN KEY ("addressId") REFERENCES "addresses" ("id") ON DELETE RESTRICT ON UPDATE CASCADE,
     CONSTRAINT "resales_userId_fkey" FOREIGN KEY ("userId") REFERENCES "users" ("id") ON DELETE RESTRICT ON UPDATE CASCADE
 );
-INSERT INTO "new_resales" ("addressId", "cpfcnpj", "id", "name", "phone") SELECT "addressId", "cpfcnpj", "id", "name", "phone" FROM "resales";
+INSERT INTO "new_resales" ("addressId", "id", "name", "phone") SELECT "addressId", "id", "name", "phone" FROM "resales";
 DROP TABLE "resales";
 ALTER TABLE "new_resales" RENAME TO "resales";
 CREATE UNIQUE INDEX "resales_userId_key" ON "resales"("userId");

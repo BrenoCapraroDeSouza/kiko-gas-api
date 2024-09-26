@@ -1,8 +1,9 @@
 import fastify from "fastify";
-import { resalesRoutes } from "./http/controllers/resales/routes";
 import fastifyJwt from "@fastify/jwt";
-import { env } from "./env";
 import fastifyCookie from "@fastify/cookie";
+import { env } from "./env";
+import { resalesRoutes } from "./http/controllers/resales/routes";
+import { clientsRoutes } from "./http/controllers/clients/routes";
 import { usersRoute } from "./http/controllers/users/routes";
 
 export const app = fastify();
@@ -22,4 +23,5 @@ app.register(fastifyCookie);
 
 // Routes
 app.register(resalesRoutes);
+app.register(clientsRoutes);
 app.register(usersRoute);
