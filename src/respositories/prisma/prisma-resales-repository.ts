@@ -19,6 +19,14 @@ export class PrismaResaleRepository implements ResaleRepository {
     });
   }
 
+  async findByUserId(id: string): Promise<Resale | null> {
+    return await prisma.resale.findUnique({
+      where: {
+        userId: id,
+      },
+    });
+  }
+
   async update(
     id: string,
     data: Prisma.ResaleUpdateInput
