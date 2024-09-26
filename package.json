@@ -4,7 +4,9 @@
   "description": "API oficial dos serviços Kiko Gás",
   "main": "index.js",
   "scripts": {
-    "dev": "tsx watch --env-file .env src/server.ts"
+    "dev": "tsx watch --env-file .env src/server.ts",
+    "test": "vitest",
+    "coverage": "vitest run --coverage"
   },
   "keywords": [],
   "author": "",
@@ -22,10 +24,13 @@
     "@rocketseat/eslint-config": "^2.2.2",
     "@types/bcryptjs": "^2.4.6",
     "@types/node": "^22.5.5",
+    "@vitest/coverage-v8": "^2.1.1",
     "eslint": "^8.57.0",
     "globals": "^15.9.0",
     "prisma": "^5.19.1",
     "tsx": "^4.19.1",
-    "typescript": "^5.6.2"
+    "typescript": "^5.6.2",
+    "vite-tsconfig-paths": "^5.0.1",
+    "vitest": "^2.1.1"
   }
 }
