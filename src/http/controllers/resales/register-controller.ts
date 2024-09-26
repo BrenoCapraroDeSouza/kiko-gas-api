@@ -9,7 +9,7 @@ export async function register(
   const registerBodySchema = z.object({
     name: z.string(),
     phone: z.string(),
-    cpfcnpj: z.string(),
+    cnpj: z.string(),
     email: z.string().email(),
     password: z.string(),
     address: z.object({
@@ -22,7 +22,7 @@ export async function register(
     }),
   });
 
-  const { name, address, cpfcnpj, email, password, phone } =
+  const { name, address, cnpj, email, password, phone } =
     registerBodySchema.parse(request.body);
 
   const registerService = makeRegisterService();
@@ -31,7 +31,7 @@ export async function register(
     const { resale } = await registerService.execute({
       name,
       phone,
-      cpfcnpj,
+      cnpj,
       email,
       password,
       address,
