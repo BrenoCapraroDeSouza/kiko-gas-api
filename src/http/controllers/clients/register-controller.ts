@@ -27,6 +27,7 @@ export async function register(
       cpfcnpj,
       email,
       password,
+      resaleId: (request.user as any).userId,
     });
 
     response.status(201).send(client);
