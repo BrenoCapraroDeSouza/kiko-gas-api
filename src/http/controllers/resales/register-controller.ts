@@ -1,6 +1,6 @@
 import { FastifyReply, FastifyRequest } from "fastify";
 import { z } from "zod";
-import { makeRegisterService } from "../../../service/resale/factories/make-register-service";
+import { makeRegisterResaleService } from "../../../services/factories/make-register-resale-service";
 
 export async function register(
   request: FastifyRequest,
@@ -25,21 +25,31 @@ export async function register(
   const { name, address, cnpj, email, password, phone } =
     registerBodySchema.parse(request.body);
 
-  const registerService = makeRegisterService();
+  const registerResaleService = makeRegisterResaleService();
 
   try {
-    const { resale } = await registerService.execute({
+    const resale = await registerResaleService.execute({
       name,
       phone,
       cnpj,
       email,
       password,
-      address,
+      address: {
+        ...address,
+        ie: address.ie ?? "",
+      },
     });
 
     response.status(201).send(resale);
-  } catch (error) {
-    console.error(error);
-    response.status(500).send({ message: "Internal server error" });
+  } catch (error: any) {
+    console.error("Erro ao registrar Resale:", error);
+
+    if (error.message === "Email já está em uso") {
+      response.status(400).send({ message: error.message });
+    } else if (error.message === "Resale não encontrado") {
+      response.status(404).send({ message: error.message });
+    } else {
+      response.status(500).send({ message: "Erro interno do servidor" });
+    }
   }
 }

@@ -1,98 +1,70 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "mongodb"
   url      = env("DATABASE_URL")
 }
 
-// for postgreSQL
-// enum UserType {
-//   CLIENT
-//   RESALE
-// }
-
-model User { 
-  id        String   @id @default(cuid())
-  email     String   @unique
-  password  String
-  userType String
-  
-  Resale Resale?
-  Client Client?
-
-  @@map("users")
+enum UserRole {
+  RESALE
+  CLIENT
 }
 
-model Address {
-  id           String   @id @default(cuid())
-  idClient     String? @unique
-  idResale     String? @unique
+type Address {
   state        String
   city         String
   neighborhood String
   publicPlace  String
   number       String
-  ie           String?
-  client       Client?  @relation(fields: [idClient], references: [id])
-  resale       Resale?
-
-  @@map("addresses")
+  ie           String
 }
 
-model Client {
-  id        String     @id @default(cuid())
-  resaleId  String?     @unique  
-  userId    String      @unique
-  name      String
-  phone     String
-  cpfcnpj   String
-  addresses Address[]
-  devices   Device[]
-  resale    Resale?     @relation(fields: [resaleId], references: [id])
-  user      User        @relation(fields: [userId], references: [id])
-  @@map("clients")
-}
+model User {
+  id       String   @id @default(auto()) @map("_id") @db.ObjectId
+  email    String   @unique
+  password String
+  role     UserRole
 
-model Device {
-  id        String  @id @default(cuid())
-  idClient  String
-  idResale  String
-  tare      Float
-  weight    Float
-  gas       Float
-  signals   Signal[]
-  client    Client  @relation(fields: [idClient], references: [id])
-  resale    Resale  @relation(fields: [idResale], references: [id])
-
-  @@map("devices")
+  resale   Resale?  @relation("UserResale")
+  client   Client?  @relation("UserClient")
 }
 
 model Resale {
-  id        String   @id @default(cuid())
-  userId   String   @unique
-  addressId String   @unique 
-  name      String
-  phone     String
-  cnpj   String
-  clients   Client[] 
-  devices   Device[]
-  address   Address  @relation(fields: [addressId], references: [id])
-  user     User     @relation(fields: [userId], references: [id])
+  id      String   @id @default(auto()) @map("_id") @db.ObjectId
+  name    String
+  address Address
+  phone   String
+  cnpj    String
 
-  @@map("resales")
+  user    User     @relation("UserResale", fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  userId  String   @unique @db.ObjectId
+
+  Client Client[]
 }
 
-model Signal {
-  id          String   @id @default(cuid())
-  idDevice    String
-  date        DateTime @default(now())
-  isFinished  Boolean
-  device      Device   @relation(fields: [idDevice], references: [id])
+model Client {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  name      String
+  addresses Address[]
+  devices   Device[]
+  phone     String
+  cpfcnpj   String
 
-  @@map("signals")
+  user      User     @relation("UserClient", fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  userId    String   @unique @db.ObjectId
+
+  resale    Resale?  @relation(fields: [resaleId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  resaleId  String?  @db.ObjectId
+}
+
+model Device {
+  id       String  @id @default(auto()) @map("_id") @db.ObjectId
+  tare     Float
+  weight   Float
+  gas      Float
+
+  client   Client  @relation(fields: [clientId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  clientId String  @db.ObjectId
 }
