@@ -1,6 +1,6 @@
 import { FastifyReply, FastifyRequest } from "fastify";
 import { z } from "zod";
-import { makeAuthenticateService } from "../../../service/users/factories/make-authenticate-service";
+import { makeAuthenticateUserService } from "../../../services/factories/make-authenticate-user-service";
 
 export async function authenticate(
   request: FastifyRequest,
@@ -13,7 +13,7 @@ export async function authenticate(
 
   const { email, password } = registerBodySchema.parse(request.body);
 
-  const authenticateService = makeAuthenticateService();
+  const authenticateService = makeAuthenticateUserService();
 
   try {
     const { user } = await authenticateService.execute({
@@ -23,7 +23,7 @@ export async function authenticate(
 
     const token = await response.jwtSign(
       {
-        type: user.userType,
+        type: user.role,
         userId: user.id,
       },
       {
@@ -35,7 +35,7 @@ export async function authenticate(
 
     const refreshToken = await response.jwtSign(
       {
-        type: user.userType,
+        type: user.role,
         userId: user.id,
       },
       {
