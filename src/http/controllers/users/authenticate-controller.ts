@@ -2,7 +2,6 @@ import { FastifyReply, FastifyRequest } from "fastify";
 import { z } from "zod";
 import { makeAuthenticateUserService } from "../../../service/factories";
 
-
 export async function authenticate(
   request: FastifyRequest,
   response: FastifyReply
@@ -17,10 +16,10 @@ export async function authenticate(
   const authenticateService = makeAuthenticateUserService();
 
   try {
-    const { user } = await authenticateService.execute({
+    const { user } = (await authenticateService.execute({
       email,
       password,
-    });
+    })) as any;
 
     const token = await response.jwtSign(
       {
@@ -56,6 +55,7 @@ export async function authenticate(
       })
       .status(200)
       .send({
+        name: user.resale.name,
         token,
       });
   } catch (error) {

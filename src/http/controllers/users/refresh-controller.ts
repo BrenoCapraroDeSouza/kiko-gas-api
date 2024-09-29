@@ -1,19 +1,24 @@
 import { FastifyReply, FastifyRequest } from "fastify";
+import { makeGetUserService } from "../../../service/factories/make-get-user-service";
 
 export async function refresh(request: FastifyRequest, response: FastifyReply) {
   await request.jwtVerify({
     onlyCookie: true,
   });
 
-  const user = request.user as any;
+  const userParams = request.user as any;
 
-  const { type, userId } = user;
+  const { type, userId } = userParams;
+
+  const userService = makeGetUserService();
+
+  const user = (await userService.execute({ userId })) as any;
 
   const token = await response.jwtSign(
     { type },
     {
       sign: {
-        sub: user.id,
+        sub: userId,
       },
     }
   );
@@ -22,7 +27,7 @@ export async function refresh(request: FastifyRequest, response: FastifyReply) {
     { type, userId },
     {
       sign: {
-        sub: user.id,
+        sub: userId,
         expiresIn: "7d",
       },
     }
@@ -37,6 +42,7 @@ export async function refresh(request: FastifyRequest, response: FastifyReply) {
     })
     .status(200)
     .send({
+      name: user?.resale?.name || user?.client?.name,
       token,
     });
 }
