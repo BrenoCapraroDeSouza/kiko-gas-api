@@ -25,7 +25,12 @@ app.register(fastifyJwt, {
   },
 });
 
-app.register(fastifyCookie);
+app.register(fastifyCookie, {
+  parseOptions: {
+    sameSite: "none",
+    secure: true,
+  },
+});
 
 // Routes
 app.register(resalesRoutes);
