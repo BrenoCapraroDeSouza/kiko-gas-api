@@ -1,6 +1,7 @@
 import { FastifyReply, FastifyRequest } from "fastify";
 import { z } from "zod";
-import { makeRegisterResaleService } from "../../../services/factories/make-register-resale-service";
+import { makeRegisterResaleService } from "../../../service/factories";
+
 
 export async function register(
   request: FastifyRequest,

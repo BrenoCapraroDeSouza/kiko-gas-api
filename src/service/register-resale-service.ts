@@ -1,7 +1,7 @@
 import bcrypt from "bcryptjs";
 import { UserRepository } from "../repositories/user-repository";
-import { ResaleRepository } from "../repositories/resale-repository";
 import { Resale, User, Prisma } from "@prisma/client";
+import { ResaleRepository } from "../repositories/Resale-repository";
 
 interface RegisterResaleRequest {
   email: string;

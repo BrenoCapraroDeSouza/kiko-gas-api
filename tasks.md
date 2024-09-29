@@ -10,8 +10,8 @@ feat-add-create-
 
 ### Task 2: Criar rota findAll com paginação
 
-- [ ] Implementar a rota findAll para Clientes com paginação.
-- [ ] Implementar a rota findAll para Revendedores com paginação.
+- [ X ] Implementar a rota findAll para Clientes com paginação.
+- [ X ] Implementar a rota findAll para Revendedores com paginação.
 - [ ] Implementar a rota findAll para Gás do Revendedor com paginação.
 - [ ] Implementar a rota findAll para Gás do Cliente com paginação.
 - [ ] Implementar a rota findAll para Endereços do Cliente com paginação.
