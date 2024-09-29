@@ -28,9 +28,10 @@ export async function refresh(request: FastifyRequest, response: FastifyReply) {
     const user = (await userService.execute({ userId })) as any;
 
     const newToken = await response.jwtSign(
-      { type },
+      { type, userId },
       {
         sign: {
+          userId: user.id,
           sub: userId,
         },
       }
@@ -60,6 +61,7 @@ export async function refresh(request: FastifyRequest, response: FastifyReply) {
         token: newToken, // Retorna o novo token
       });
   } catch (error) {
+    console.error(error);
     return response.status(401).send({ error: "Invalid or expired token" });
   }
 }
