@@ -1,6 +1,6 @@
 import bcrypt from "bcryptjs";
 import { ClientRepository } from "../repositories/client-repository";
-import { Client, User } from "@prisma/client";
+import { Client } from "@prisma/client";
 
 interface FetchClientRequest {
   page?: number;
