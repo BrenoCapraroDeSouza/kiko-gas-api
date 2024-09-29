@@ -8,7 +8,10 @@ export class PrismaUserRepository implements UserRepository {
   }
 
   async findByEmail(email: string): Promise<User | null> {
-    return prisma.user.findUnique({ where: { email } });
+    return prisma.user.findUnique({
+      where: { email },
+      include: { client: true, resale: true },
+    });
   }
 
   async findById(id: string) {

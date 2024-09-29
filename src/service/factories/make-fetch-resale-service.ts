@@ -1,4 +1,4 @@
-import { PrismaResaleRepository } from "../../repositories/prisma/prisma-Resale-repository";
+import { PrismaResaleRepository } from "../../repositories/prisma/prisma-resale-repository";
 import { FetchResaleService } from "../fetch-resale-service";
 
 export function makeFetchResaleService(): FetchResaleService {
