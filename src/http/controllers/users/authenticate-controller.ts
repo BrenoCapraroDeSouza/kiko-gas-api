@@ -1,6 +1,7 @@
 import { FastifyReply, FastifyRequest } from "fastify";
 import { z } from "zod";
-import { makeAuthenticateUserService } from "../../../services/factories/make-authenticate-user-service";
+import { makeAuthenticateUserService } from "../../../service/factories";
+
 
 export async function authenticate(
   request: FastifyRequest,
