@@ -21,7 +21,14 @@ export class PrismaClientRepository implements ClientRepository {
     });
   }
 
-  async findAll(): Promise<Client[]> {
-    return prisma.client.findMany();
+  async findAll(
+    page: number = 1, 
+    pageSize: number = 10
+  ): Promise<Client[]> {
+    const skip = (page - 1) * pageSize;
+    return await prisma.client.findMany({
+      skip,
+      take: pageSize,
+    });
   }
 }
