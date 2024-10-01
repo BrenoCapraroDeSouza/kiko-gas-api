@@ -22,11 +22,13 @@ export class PrismaClientRepository implements ClientRepository {
   }
 
   async findAll(
+    resaleId: string,
     page: number = 1, 
     pageSize: number = 10
   ): Promise<Client[]> {
     const skip = (page - 1) * pageSize;
     return await prisma.client.findMany({
+      where: { resaleId: resaleId },
       skip,
       take: pageSize,
     });
