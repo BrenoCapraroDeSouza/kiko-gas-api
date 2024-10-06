@@ -6,7 +6,7 @@ export async function findAll(
 ) {
 
     const { page = 1, pageSize = 10 } = request.query as any;
-
+    
     const fetchResaleService = makeFetchResaleService();
 
     try {
