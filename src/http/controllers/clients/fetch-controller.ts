@@ -8,9 +8,6 @@ export async function findAll(
     request: FastifyRequest, response: FastifyReply
 ) {
 
-    await verifyJWT(request, response);
-    await verifyUserType("RESALE")(request, response);
-
     const { page = 1, pageSize = 10 } = request.query as any;
 
     const userId = request.user.userId;
