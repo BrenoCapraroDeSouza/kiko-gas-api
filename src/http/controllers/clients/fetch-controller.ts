@@ -8,6 +8,9 @@ export async function findAll(
     request: FastifyRequest, response: FastifyReply
 ) {
 
+    await verifyJWT(request, response);
+    await verifyUserType("RESALE")(request, response);
+
     const { page = 1, pageSize = 10 } = request.query as any;
 
     const userId = request.user.userId;
@@ -19,7 +22,7 @@ export async function findAll(
     if (!user) return response.code(404).send({ message: "User not found" });
 
     if (!user.resale) return response.code(404).send({ message: "Resale not found for user" });
-    
+
     const resaleId = user.resale.id;
 
     const fetchClientService = makeFetchClientService();
