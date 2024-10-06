@@ -10,5 +10,7 @@ export async function clientsRoutes(app: FastifyInstance) {
     { onRequest: [verifyJWT, verifyUserType("RESALE")] },
     register
   );
-  app.get("/clients", findAll);
+  app.get("/clients", 
+    { onRequest: [verifyJWT, verifyUserType("RESALE")] },
+    findAll);
 }
