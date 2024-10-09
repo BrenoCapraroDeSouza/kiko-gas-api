@@ -32,39 +32,57 @@ model User {
 }
 
 model Resale {
-  id      String   @id @default(auto()) @map("_id") @db.ObjectId
-  name    String
-  address Address
-  phone   String
-  cnpj    String
+  id       String   @id @default(auto()) @map("_id") @db.ObjectId
+  name     String
+  address  Address
+  phone    String
+  cnpj     String
 
-  user    User     @relation("UserResale", fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  userId  String   @unique @db.ObjectId
+  user     User     @relation("UserResale", fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  userId   String   @unique @db.ObjectId
 
-  Client Client[]
+  clients  Client[]
+  devices  Device[]
 }
 
 model Client {
-  id        String   @id @default(auto()) @map("_id") @db.ObjectId
-  name      String
-  addresses Address[]
-  devices   Device[]
-  phone     String
-  cpfcnpj   String
+  id          String       @id @default(auto()) @map("_id") @db.ObjectId
+  name        String
+  addresses   Address[]
+  phone       String
+  cpfcnpj     String
 
-  user      User     @relation("UserClient", fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  userId    String   @unique @db.ObjectId
+  user        User         @relation("UserClient", fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  userId      String       @unique @db.ObjectId
 
-  resale    Resale?  @relation(fields: [resaleId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  resaleId  String?  @db.ObjectId
+  resale      Resale?      @relation(fields: [resaleId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  resaleId    String?      @db.ObjectId
+
+  devices     Device[]     
 }
 
 model Device {
-  id       String  @id @default(auto()) @map("_id") @db.ObjectId
-  tare     Float
-  weight   Float
-  gas      Float
+  id        String  @id @default(auto()) @map("_id") @db.ObjectId
+  tare      Float
+  weight    Float
+  gas       Float
+  price     Float // Preço padrão do dispositivo
 
-  client   Client  @relation(fields: [clientId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  clientId String  @db.ObjectId
+  resale    Resale @relation(fields: [resaleId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  resaleId  String @db.ObjectId
+
+  client    Client? @relation(fields: [clientId], references: [id], onDelete: SetNull, onUpdate: NoAction)
+  clientId  String? @db.ObjectId
+
+  devicePrices DevicePrice[]
+}
+
+model DevicePrice {
+  id        String  @id @default(auto()) @map("_id") @db.ObjectId
+  price     Float
+  client    Client  @relation(fields: [clientId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  clientId  String  @db.ObjectId
+
+  device    Device  @relation(fields: [deviceId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  deviceId  String  @db.ObjectId
 }
