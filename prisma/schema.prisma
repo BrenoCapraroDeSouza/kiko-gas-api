@@ -7,64 +7,42 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-enum UserRole {
-  RESALE
-  CLIENT
-}
-
-type Address {
-  state        String
+type ResaleAddress {
   city         String
-  neighborhood String
-  publicPlace  String
-  number       String
   ie           String
-}
-
-model User {
-  id       String   @id @default(auto()) @map("_id") @db.ObjectId
-  email    String   @unique
-  password String
-  role     UserRole
-
-  resale   Resale?  @relation("UserResale")
-  client   Client?  @relation("UserClient")
-}
-
-model Resale {
-  id      String   @id @default(auto()) @map("_id") @db.ObjectId
-  name    String
-  address Address
-  phone   String
-  cnpj    String
-
-  user    User     @relation("UserResale", fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  userId  String   @unique @db.ObjectId
-
-  Client Client[]
+  neighborhood String
+  number       String
+  publicPlace  String
+  state        String
 }
 
 model Client {
-  id        String   @id @default(auto()) @map("_id") @db.ObjectId
-  name      String
-  addresses Address[]
-  devices   Device[]
-  phone     String
+  id        String @id @default(auto()) @map("_id") @db.ObjectId
+  /// Could not determine type: the field only had null or empty values in the sample set.
+  addresses Json?
   cpfcnpj   String
-
-  user      User     @relation("UserClient", fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  userId    String   @unique @db.ObjectId
-
-  resale    Resale?  @relation(fields: [resaleId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  resaleId  String?  @db.ObjectId
+  name      String
+  phone     String
+  resaleId  String @db.ObjectId
+  userId    String @unique @db.ObjectId
 }
 
 model Device {
-  id       String  @id @default(auto()) @map("_id") @db.ObjectId
-  tare     Float
-  weight   Float
-  gas      Float
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+}
 
-  client   Client  @relation(fields: [clientId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  clientId String  @db.ObjectId
+model Resale {
+  id      String        @id @default(auto()) @map("_id") @db.ObjectId
+  address ResaleAddress
+  cnpj    String
+  name    String
+  phone   String
+  userId  String        @unique @db.ObjectId
+}
+
+model User {
+  id       String @id @default(auto()) @map("_id") @db.ObjectId
+  email    String @unique
+  password String
+  role     String
 }

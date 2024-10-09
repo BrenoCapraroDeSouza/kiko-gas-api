@@ -1,14 +1,16 @@
 import { FastifyRequest, FastifyReply } from "fastify";
 import { makeFetchClientService } from "../../../service/factories";
 import { makeGetUserService } from "../../../service/factories/make-get-user-service";
+import { parse } from "path";
 
 export interface QueryParams {
-  page?: number;
-  pageSize?: number;
+  page?: string;
+  pageSize?: string;
+  orderBy?: "asc" | "desc";
 }
 
 export async function findAll(request: FastifyRequest, response: FastifyReply) {
-  const { page = 1, pageSize = 10 } = request.query as QueryParams;
+  const { page, pageSize , orderBy } = request.query as QueryParams;
 
   const userId = request.user.userId;
 
@@ -18,8 +20,7 @@ export async function findAll(request: FastifyRequest, response: FastifyReply) {
 
   if (!user) return response.code(404).send({ message: "User not found" });
 
-  if (!user.resale)
-    return response.code(404).send({ message: "Resale not found for user" });
+  if (!user.resale) return response.code(404).send({ message: "Resale not found for user" });
 
   const resaleId = user.resale.id;
 
@@ -28,8 +29,9 @@ export async function findAll(request: FastifyRequest, response: FastifyReply) {
   try {
     const clients = await fetchClientService.execute({
       resaleId,
-      page,
-      pageSize,
+      page: parseInt(page as any),
+      pageSize: parseInt(pageSize as any),
+      orderBy,
     });
     response.status(200).send(clients);
   } catch (error) {
