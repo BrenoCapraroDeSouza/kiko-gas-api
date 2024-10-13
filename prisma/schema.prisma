@@ -69,7 +69,8 @@ model Device {
   tare      Float
   weight    Float
   gas       Float
-  defaultPrice Float
+
+  price Float
 
   resale    Resale  @relation(fields: [resaleId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   resaleId  String  @db.ObjectId

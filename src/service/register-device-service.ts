@@ -32,7 +32,7 @@ export class RegisterDeviceService {
       weight: 25,
       tare: 50,
       customPrice: customPrice ? customPrice : 0,
-      defaultPrice: price ? price : 100,
+      price: price ? price : 100,
       resale: { connect: { id: resale.id } },
     });
 
