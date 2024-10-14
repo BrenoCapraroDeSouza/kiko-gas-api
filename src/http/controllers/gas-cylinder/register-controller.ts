@@ -16,6 +16,7 @@ export async function register(
 ) {
   const registerBodySchema = z.object({
     name: z.string(),
+    weight: z.number(),
     description: z.string().optional(),
     price: z.number().optional(),
   });
@@ -32,7 +33,7 @@ export async function register(
     return response.status(400).send({ message: "Dados inválidos" });
   }
 
-  const { name, description, price } = data.data;
+  const { name, weight, description, price } = data.data;
 
   const registerDeviceService = makeRegisterGasCylinderService();
 
@@ -40,6 +41,7 @@ export async function register(
     const device = await registerDeviceService.execute({
       name,
       description,
+      weight,
       price,
       userId,
     });

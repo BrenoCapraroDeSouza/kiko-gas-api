@@ -1,11 +1,12 @@
 import { GasCylinder } from "@prisma/client";
-import { GasCylinderRepository } from "../repositories/prisma/prisma-device-repository";
+import { GasCylinderRepository } from "../repositories/prisma/prisma-gas-cylinder-repository";
 import { UserRepository } from "../repositories/user-repository";
 
 interface RegisterGasCylinderRequest {
   name: string;
   description?: string;
   userId: string;
+  weight: number;
   price?: number;
 }
 
@@ -16,7 +17,7 @@ export class RegisterGasCylinderService {
   ) {}
 
   async execute(data: RegisterGasCylinderRequest): Promise<GasCylinder> {
-    const { price, userId, name, description } = data;
+    const { price, userId, name, weight, description } = data;
 
     const { resale } = await this.userRepository.findById(userId);
 
@@ -28,7 +29,7 @@ export class RegisterGasCylinderService {
       name,
       description: description ? description : "",
       price: price ? price : 100,
-      weight: 25,
+      weight,
       resaleId: resale.id,
       tare: 10,
     });
