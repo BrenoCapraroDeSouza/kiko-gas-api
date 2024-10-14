@@ -24,6 +24,7 @@ type Address {
 type GasCylinderRef {
   id          String @db.ObjectId
   name        String
+  description String
   price      Float        
 }
 
@@ -69,7 +70,7 @@ model Client {
 model GasCylinder {
   id          String   @id @default(auto()) @map("_id") @db.ObjectId
   name        String
-  description String?
+  description String
   price       Float
   tare        Float
   weight      Float
