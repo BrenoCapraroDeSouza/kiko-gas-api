@@ -2,7 +2,7 @@ import { GasCylinderRepository } from "../repositories/gas-cylinder-repository";
 import { GasCylinder } from "@prisma/client";
 
 interface FetchGasCylinderRequest {
-  resaleId;
+  resaleId: string;
   page?: number;
   pageSize?: number;
 }
