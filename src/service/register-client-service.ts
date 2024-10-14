@@ -3,6 +3,13 @@ import { UserRepository } from "../repositories/user-repository";
 import { ClientRepository } from "../repositories/client-repository";
 import { Client, User, Prisma } from "@prisma/client";
 
+interface GasCylinder {
+  id: string;
+  name: string;
+  description: string;
+  price: number;
+}
+
 interface RegisterClientRequest {
   email: string;
   password: string;
@@ -10,7 +17,9 @@ interface RegisterClientRequest {
   phone: string;
   cpfcnpj: string;
   userId: string;
-  customerGasCylinder: Prisma.CustomerGasCylinderCreateInput;
+  customerGasCylinder: {
+    gasCylinders: GasCylinder[];
+  };
 }
 
 export class RegisterClientService {
