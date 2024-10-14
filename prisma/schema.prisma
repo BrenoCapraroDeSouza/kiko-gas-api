@@ -54,7 +54,7 @@ model Resale {
 model Client {
   id          String       @id @default(auto()) @map("_id") @db.ObjectId
   name        String
-  addresses   Address[]
+  addresses   String[]
   phone       String
   cpfcnpj     String
 
