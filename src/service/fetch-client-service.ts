@@ -6,6 +6,7 @@ interface FetchClientRequest {
   resaleId
   page?: number;
   pageSize?: number;
+  orderBy?: "asc" | "desc";
 }
 
 export class FetchClientService {
@@ -18,7 +19,8 @@ export class FetchClientService {
     const client: Client[] = await this.clientRepository.findAll(
         data.resaleId,
         data.page || 1,
-        data.pageSize || 10
+        data.pageSize || 10,
+        data.orderBy
     );
 
     return client;
