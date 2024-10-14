@@ -9,6 +9,7 @@ interface RegisterClientRequest {
   name: string;
   phone: string;
   cpfcnpj: string;
+  deviceId: string;
   userId: string;
 }
 

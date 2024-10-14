@@ -58,8 +58,7 @@ model Client {
   resale      Resale?      @relation(fields: [resaleId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   resaleId    String?      @db.ObjectId
  
-
-  CustomerDevice CustomerDevice[]
+  devices CustomerDevice[]
 }
 
 model Device {
@@ -74,7 +73,7 @@ model Device {
 
   resaleId    String     @db.ObjectId     
 
-  CustomerDevice CustomerDevice[]
+  customerDevices CustomerDevice[]
 }
 
 model CustomerDevice {
@@ -86,5 +85,5 @@ model CustomerDevice {
   device      Device   @relation(fields: [deviceId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   deviceId    String   @db.ObjectId
   
-  customPrice Float?                       
+  customPrice Float?              
 }

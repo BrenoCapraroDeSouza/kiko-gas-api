@@ -7,7 +7,6 @@ interface RegisterDeviceRequest {
   description?: string;
   userId: string;
   price?: number;
-  customPrice?: number;
 }
 
 export class RegisterDeviceService {
@@ -17,7 +16,7 @@ export class RegisterDeviceService {
   ) {}
 
   async execute(data: RegisterDeviceRequest): Promise<Device> {
-    const { customPrice, price, userId, name, description } = data;
+    const { price, userId, name, description } = data;
 
     const { resale } = await this.userRepository.findById(userId);
 
@@ -31,7 +30,6 @@ export class RegisterDeviceService {
       gas: 100,
       weight: 25,
       tare: 50,
-      customPrice: customPrice ? customPrice : 0,
       price: price ? price : 100,
       resale: { connect: { id: resale.id } },
     });
