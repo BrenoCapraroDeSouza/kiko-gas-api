@@ -1,4 +1,4 @@
-import { Prisma, GasCylinder } from "@prisma/client";
+import { Prisma, GasCylinder, CustomerGasCylinder } from "@prisma/client";
 import { prisma } from "../../lib/prisma";
 
 export class GasCylinderRepository implements GasCylinderRepository {
@@ -21,6 +21,16 @@ export class GasCylinderRepository implements GasCylinderRepository {
       where: { resaleId: resaleId },
       skip,
       take: pageSize,
+    });
+  }
+
+  async fetchAllByClientId(
+    clientId: string,
+    page: number = 1,
+    pageSize: number = 10
+  ): Promise<CustomerGasCylinder | null> {
+    return await prisma.customerGasCylinder.findUnique({
+      where: { clientId: clientId },
     });
   }
 }
