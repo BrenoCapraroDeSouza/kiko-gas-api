@@ -1,21 +1,21 @@
+import { GasCylinder } from "@prisma/client";
+import { GasCylinderRepository } from "../repositories/prisma/prisma-device-repository";
 import { UserRepository } from "../repositories/user-repository";
-import { Device } from "@prisma/client";
-import { DeviceRepository } from "../repositories/device-repository";
 
-interface RegisterDeviceRequest {
+interface RegisterGasCylinderRequest {
   name: string;
   description?: string;
   userId: string;
   price?: number;
 }
 
-export class RegisterDeviceService {
+export class RegisterGasCylinderService {
   constructor(
     private userRepository: UserRepository,
-    private deviceRepository: DeviceRepository
+    private gasCylinderRepository: GasCylinderRepository
   ) {}
 
-  async execute(data: RegisterDeviceRequest): Promise<Device> {
+  async execute(data: RegisterGasCylinderRequest): Promise<GasCylinder> {
     const { price, userId, name, description } = data;
 
     const { resale } = await this.userRepository.findById(userId);
@@ -24,16 +24,15 @@ export class RegisterDeviceService {
       throw new Error("Resale não encontrado");
     }
 
-    const device = await this.deviceRepository.register({
+    const gasCylinder = await this.gasCylinderRepository.register({
       name,
       description: description ? description : "",
-      gas: 100,
-      weight: 25,
-      tare: 50,
       price: price ? price : 100,
-      resale: { connect: { id: resale.id } },
+      weight: 25,
+      resaleId: resale.id,
+      tare: 10,
     });
 
-    return device;
+    return gasCylinder;
   }
 }
