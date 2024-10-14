@@ -10,6 +10,7 @@ interface RegisterClientRequest {
   phone: string;
   cpfcnpj: string;
   userId: string;
+  customerGasCylinder: Prisma.CustomerGasCylinderCreateInput;
 }
 
 export class RegisterClientService {
@@ -33,6 +34,10 @@ export class RegisterClientService {
       throw new Error("Resale não encontrado");
     }
 
+    if (!data.customerGasCylinder) {
+      throw new Error("Cilindro de gás não informado");
+    }
+
     const user: User = await this.userRepository.create({
       email: data.email,
       password: hashedPassword,
@@ -46,7 +51,7 @@ export class RegisterClientService {
       resale: resale.id ? { connect: { id: resale.id } } : undefined,
       user: { connect: { id: user.id } },
       addresses: [],
-      devices: { create: [] },
+      customerGasCylinder: { create: data.customerGasCylinder },
     });
 
     return client;
