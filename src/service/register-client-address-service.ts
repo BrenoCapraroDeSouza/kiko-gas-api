@@ -25,9 +25,11 @@ export class RegisterClientAddressService {
         throw new Error("Cliente não encontrado!");
     }
 
+    const { name, address } = addressData;
+
     const updatedClient = await this.clientRepository.registerAddress(client.id, {
-        name: addressData.name,
-        address: addressData.address,
+        name,
+        address,
     });
 
     return updatedClient;
