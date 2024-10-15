@@ -55,7 +55,7 @@ export async function authenticate(
       })
       .status(200)
       .send({
-        name: user.resale.name,
+        name: user?.resale?.name ?? user?.client?.name,
         token,
       });
   } catch (error) {

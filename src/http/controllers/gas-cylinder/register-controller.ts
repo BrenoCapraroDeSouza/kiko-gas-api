@@ -1,7 +1,6 @@
 import { FastifyReply, FastifyRequest } from "fastify";
-
+import { makeRegisterGasCylinderService } from "../../../service/factories/make-register-gas-cylinder-service";
 import { z } from "zod";
-import { makeRegisterDeviceService } from "../../../service/factories/make-register-device-service";
 
 declare module "fastify" {
   interface FastifyRequest {
@@ -11,17 +10,16 @@ declare module "fastify" {
   }
 }
 
-export async function registerDevice(
+export async function register(
   request: FastifyRequest,
   response: FastifyReply
 ) {
-  const registerBodySchema = z
-    .object({
-      name: z.string(),
-      description: z.string().optional(),
-      price: z.number().optional(),
-    })
-    .strict();
+  const registerBodySchema = z.object({
+    name: z.string(),
+    weight: z.number(),
+    description: z.string().optional(),
+    price: z.number().optional(),
+  });
 
   const userId = request.user?.userId;
 
@@ -29,16 +27,21 @@ export async function registerDevice(
     throw new Error("Usuário não autenticado");
   }
 
-  const { name, description, price } = registerBodySchema.parse(request.body);
+  const data = registerBodySchema.safeParse(request.body);
 
-  console.log(request.body);
+  if (!data.success) {
+    return response.status(400).send({ message: "Dados inválidos" });
+  }
 
-  const registerDeviceService = makeRegisterDeviceService();
+  const { name, weight, description, price } = data.data;
+
+  const registerDeviceService = makeRegisterGasCylinderService();
 
   try {
     const device = await registerDeviceService.execute({
       name,
       description,
+      weight,
       price,
       userId,
     });

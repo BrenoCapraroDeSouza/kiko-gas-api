@@ -21,6 +21,18 @@ type Address {
   ie           String
 }
 
+type ClientAddress {
+  name String
+  address String
+}
+
+type GasCylinderRef {
+  id          String @db.ObjectId
+  name        String
+  description String
+  price      Float        
+}
+
 model User {
   id       String   @id @default(auto()) @map("_id") @db.ObjectId
   email    String   @unique
@@ -34,7 +46,7 @@ model User {
 model Resale {
   id       String   @id @default(auto()) @map("_id") @db.ObjectId
   name     String
-  address  Address
+  address  ClientAddress[]
   phone    String
   cnpj     String
 
@@ -42,13 +54,12 @@ model Resale {
   userId   String   @unique @db.ObjectId
 
   clients  Client[]
-  devices  Device[]
 }
 
 model Client {
   id          String       @id @default(auto()) @map("_id") @db.ObjectId
   name        String
-  addresses   Address[]
+  addresses   String[]
   phone       String
   cpfcnpj     String
 
@@ -57,33 +68,25 @@ model Client {
 
   resale      Resale?      @relation(fields: [resaleId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   resaleId    String?      @db.ObjectId
- 
-  devices CustomerDevice[]
+
+  customerGasCylinder  CustomerGasCylinder?
 }
 
-model Device {
+model GasCylinder {
   id          String   @id @default(auto()) @map("_id") @db.ObjectId
   name        String
-  description String?
+  description String
+  price       Float
   tare        Float
   weight      Float
-  gas         Float
-  price       Float
-  resale      Resale     @relation(fields: [resaleId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-
-  resaleId    String     @db.ObjectId     
-
-  customerDevices CustomerDevice[]
+  resaleId    String   @db.ObjectId
 }
 
-model CustomerDevice {
-  id          String   @id @default(auto()) @map("_id") @db.ObjectId
-
-  client      Client   @relation(fields: [clientId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  clientId    String   @db.ObjectId
-
-  device      Device   @relation(fields: [deviceId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  deviceId    String   @db.ObjectId
+model CustomerGasCylinder {
+  id          String              @id @default(auto()) @map("_id") @db.ObjectId
   
-  customPrice Float?              
+  clientId    String              @db.ObjectId @unique
+  client      Client              @relation(fields: [clientId], references: [id])
+
+  gasCylinders GasCylinderRef[]
 }
