@@ -69,6 +69,9 @@ model Client {
   resale   Resale? @relation(fields: [resaleId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   resaleId String? @db.ObjectId
 
+  createdAt DateTime? @default(now())
+  updatedAt DateTime? @updatedAt
+
   customerGasCylinder CustomerGasCylinder?
 }
 
