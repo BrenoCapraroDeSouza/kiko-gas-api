@@ -22,7 +22,7 @@ export async function register(
       ie: z.string().optional(),
     }),
   });
-
+  
   const { name, address, cnpj, email, password, phone } =
     registerBodySchema.parse(request.body);
 
