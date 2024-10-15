@@ -22,7 +22,7 @@ type Address {
 }
 
 type ClientAddress {
-  name String
+  name    String
   address String
 }
 
@@ -30,7 +30,7 @@ type GasCylinderRef {
   id          String @db.ObjectId
   name        String
   description String
-  price      Float        
+  price       Float
 }
 
 model User {
@@ -39,54 +39,54 @@ model User {
   password String
   role     UserRole
 
-  resale   Resale?  @relation("UserResale")
-  client   Client?  @relation("UserClient")
+  resale Resale? @relation("UserResale")
+  client Client? @relation("UserClient")
 }
 
 model Resale {
-  id       String   @id @default(auto()) @map("_id") @db.ObjectId
-  name     String
-  address  ClientAddress[]
-  phone    String
-  cnpj     String
+  id      String  @id @default(auto()) @map("_id") @db.ObjectId
+  name    String
+  address Address
+  phone   String
+  cnpj    String
 
-  user     User     @relation("UserResale", fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  userId   String   @unique @db.ObjectId
+  user   User   @relation("UserResale", fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  userId String @unique @db.ObjectId
 
-  clients  Client[]
+  clients Client[]
 }
 
 model Client {
-  id          String       @id @default(auto()) @map("_id") @db.ObjectId
-  name        String
-  addresses   String[]
-  phone       String
-  cpfcnpj     String
+  id        String          @id @default(auto()) @map("_id") @db.ObjectId
+  name      String
+  addresses ClientAddress[]
+  phone     String
+  cpfcnpj   String
 
-  user        User         @relation("UserClient", fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  userId      String       @unique @db.ObjectId
+  user   User   @relation("UserClient", fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  userId String @unique @db.ObjectId
 
-  resale      Resale?      @relation(fields: [resaleId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  resaleId    String?      @db.ObjectId
+  resale   Resale? @relation(fields: [resaleId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  resaleId String? @db.ObjectId
 
-  customerGasCylinder  CustomerGasCylinder?
+  customerGasCylinder CustomerGasCylinder?
 }
 
 model GasCylinder {
-  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  id          String @id @default(auto()) @map("_id") @db.ObjectId
   name        String
   description String
   price       Float
   tare        Float
   weight      Float
-  resaleId    String   @db.ObjectId
+  resaleId    String @db.ObjectId
 }
 
 model CustomerGasCylinder {
-  id          String              @id @default(auto()) @map("_id") @db.ObjectId
-  
-  clientId    String              @db.ObjectId @unique
-  client      Client              @relation(fields: [clientId], references: [id])
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  clientId String @unique @db.ObjectId
+  client   Client @relation(fields: [clientId], references: [id])
 
   gasCylinders GasCylinderRef[]
 }
