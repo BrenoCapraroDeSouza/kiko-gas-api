@@ -42,4 +42,21 @@ export class PrismaClientRepository implements ClientRepository {
       },
     });
   }
+
+  async registerAddress(
+    clientId: string, 
+    addressData: Prisma.ClientAddressCreateInput
+  ): Promise<Client> {
+    return prisma.client.update({
+      where: { id: clientId },
+      data: {
+        addresses: {
+          push: {
+            name: addressData.name,
+            address: addressData.address,
+          }
+        }
+      }
+    });
+  }
 }
