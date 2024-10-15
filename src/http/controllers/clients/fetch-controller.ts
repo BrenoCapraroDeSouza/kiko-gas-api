@@ -1,7 +1,6 @@
 import { FastifyRequest, FastifyReply } from "fastify";
 import { makeFetchClientService } from "../../../service/factories";
 import { makeGetUserService } from "../../../service/factories/make-get-user-service";
-import { parse } from "path";
 
 export interface QueryParams {
   page?: string;
@@ -18,9 +17,13 @@ export async function findAll(request: FastifyRequest, response: FastifyReply) {
 
   const user = await getUserService.execute({ userId });
 
-  if (!user) return response.code(404).send({ message: "User not found" });
+  if (!user) {
+    return response.code(404).send({ message: "User not found" });
+  }
 
-  if (!user.resale) return response.code(404).send({ message: "Resale not found for user" });
+  if (!user.resale) {
+    return response.code(404).send({ message: "Resale not found for user" });
+  }
 
   const resaleId = user.resale.id;
 
