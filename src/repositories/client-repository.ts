@@ -5,4 +5,5 @@ export interface ClientRepository {
   findById(id: string): Promise<Client | null>;
   update(id: string, data: Prisma.ClientUpdateInput): Promise<Client | null>;
   findAll(resaleId: string, page?: number, pageSize?: number, orderBy?: "asc" | "desc"): Promise<Client[]>;
+  registerAddress(clientId: string, addressData: Prisma.ClientAddressCreateInput): Promise<Client>;
 }
