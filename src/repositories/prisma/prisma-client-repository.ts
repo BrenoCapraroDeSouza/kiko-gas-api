@@ -1,4 +1,4 @@
-import { Prisma, Client } from "@prisma/client";
+import { Prisma, Client, ClientAddress } from "@prisma/client";
 import { ClientRepository } from "../client-repository";
 import { prisma } from "../../lib/prisma";
 
@@ -38,7 +38,7 @@ export class PrismaClientRepository implements ClientRepository {
       skip,
       take: pageSize,
       orderBy: { 
-        name: orderDirection 
+        createdAt: orderDirection 
       },
     });
   }
@@ -58,5 +58,22 @@ export class PrismaClientRepository implements ClientRepository {
         }
       }
     });
+  }
+
+  async fetchAllAddresses(
+    clientId: string
+  ): Promise<ClientAddress[] | null> {
+    const client = await prisma.client.findUnique({
+      where: { id: clientId },
+      select: {
+        addresses: true,
+      },
+    });
+
+    if (!client) {
+      throw new Error("Client not found");
+    }
+
+    return client.addresses;
   }
 }
