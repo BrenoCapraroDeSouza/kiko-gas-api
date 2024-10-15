@@ -21,6 +21,11 @@ type Address {
   ie           String
 }
 
+type ClientAddress {
+  name String
+  address String
+}
+
 type GasCylinderRef {
   id          String @db.ObjectId
   name        String
@@ -41,7 +46,7 @@ model User {
 model Resale {
   id       String   @id @default(auto()) @map("_id") @db.ObjectId
   name     String
-  address  Address
+  address  ClientAddress[]
   phone    String
   cnpj     String
 
