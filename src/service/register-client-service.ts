@@ -1,7 +1,7 @@
 import bcrypt from "bcryptjs";
 import { UserRepository } from "../repositories/user-repository";
 import { ClientRepository } from "../repositories/client-repository";
-import { Client, User, Prisma } from "@prisma/client";
+import { Client, User } from "@prisma/client";
 
 interface GasCylinder {
   id: string;
@@ -29,6 +29,19 @@ export class RegisterClientService {
   ) {}
 
   async execute(data: RegisterClientRequest): Promise<Client> {
+    
+    let { phone, cpfcnpj } = data;
+
+    phone = phone.replace(/(\d{2})(\d{1})(\d{4})(\d{4})/, "($1) $2 $3-$4");
+
+    if(cpfcnpj.length === 11) {
+      cpfcnpj = cpfcnpj.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/g,"$1.$2.$3-$4");
+    }
+
+    if(cpfcnpj.length === 14) {
+      cpfcnpj = cpfcnpj.replace(/(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/g,"$1.$2.$3/$4-$5");
+    }
+
     const existingUser = await this.userRepository.findByEmail(data.email);
 
     if (existingUser) {
@@ -55,8 +68,8 @@ export class RegisterClientService {
 
     const client: Client = await this.clientRepository.create({
       name: data.name,
-      phone: data.phone,
-      cpfcnpj: data.cpfcnpj,
+      phone: phone,
+      cpfcnpj: cpfcnpj,
       resale: resale.id ? { connect: { id: resale.id } } : undefined,
       user: { connect: { id: user.id } },
       addresses: [],
