@@ -8,16 +8,17 @@ interface FetchGasCylinderRequest {
 }
 
 export class FetchGasCylinderService {
-  constructor(private gascylinderRepository: GasCylinderRepository) {}
+  constructor(private gasCylinderRepository: GasCylinderRepository) {}
 
   async execute(data: FetchGasCylinderRequest): Promise<GasCylinder[]> {
-    const gascylinder: GasCylinder[] =
-      await this.gascylinderRepository.fetchAllByResaleId(
+
+    const gasCylinder: GasCylinder[] =
+      await this.gasCylinderRepository.fetchAllByResaleId(
         data.resaleId,
         data.page || 1,
         data.pageSize || 10
       );
-
-    return gascylinder;
+      
+    return gasCylinder;
   }
 }

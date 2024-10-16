@@ -33,7 +33,7 @@ export class RegisterGasCylinderService {
       resaleId: resale.id,
       tare: 10,
     });
-
+    
     return gasCylinder;
   }
 }

@@ -1,10 +1,10 @@
-import { PrismaResaleRepository } from "../../repositories/prisma/prisma-resale-repository";
+import { PrismaUserRepository } from "../../repositories/prisma/prisma-user-repository";
 import { FetchResaleService } from "../fetch-resale-service";
 
 export function makeFetchResaleService(): FetchResaleService {
-  const resaleRepository = new PrismaResaleRepository();
+  const usersRepository = new PrismaUserRepository();
 
-  const service = new FetchResaleService(resaleRepository);
+  const service = new FetchResaleService(usersRepository);
 
   return service;
 }
