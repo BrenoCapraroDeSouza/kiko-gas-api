@@ -5,4 +5,5 @@ export interface UserRepository {
   findByEmail(email: string): Promise<User | null>;
   findById(id: string);
   findAllClients(resaleId: string, page?: number, pageSize?: number, orderBy?: "asc" | "desc"): Promise<User[]>;
+  findAllResales(page?: number, pageSize?: number, orderBy?: "asc" | "desc"): Promise<User[]>;
 }
