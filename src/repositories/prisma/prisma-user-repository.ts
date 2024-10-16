@@ -31,7 +31,9 @@ export class PrismaUserRepository implements UserRepository {
 
     let orderDirection: Prisma.SortOrder = "asc";
 
-    if(orderBy === "desc") orderDirection = "desc";
+    if(orderBy === "desc") { 
+      orderDirection = "desc";
+    }
 
     return prisma.user.findMany({
       where: {
@@ -49,6 +51,24 @@ export class PrismaUserRepository implements UserRepository {
       },
       include: { 
         client: true 
+      },
+    });
+  }
+
+  async findAllResales(
+    page: number = 1,
+    pageSize: number = 10,
+  ): Promise<User[]> {
+    const skip = (page - 1) * pageSize;
+    
+    return prisma.user.findMany({
+      where: {
+        role: "RESALE",
+      },
+      skip,
+      take: pageSize,
+      include: { 
+        resale: true 
       },
     });
   }
