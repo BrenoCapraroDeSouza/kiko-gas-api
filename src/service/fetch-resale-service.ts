@@ -1,5 +1,5 @@
-import { ResaleRepository } from "../repositories/resale-repository";
-import { Resale } from "@prisma/client";
+import { User } from "@prisma/client";
+import { UserRepository } from "../repositories/user-repository";
 
 interface FetchResaleRequest {
   page?: number;
@@ -7,14 +7,26 @@ interface FetchResaleRequest {
 }
 
 export class FetchResaleService {
-  constructor(private resaleRepository: ResaleRepository) {}
+  constructor(private userRepository: UserRepository) {}
 
-  async execute(data: FetchResaleRequest): Promise<Resale[]> {
-    const resale: Resale[] = await this.resaleRepository.findAll(
+  async execute(data: FetchResaleRequest) {
+    const users: User[] = await this.userRepository.findAllResales(
       data.page || 1,
       data.pageSize || 10
     );
 
-    return resale;
+    
+    const response = users.map((user: any) => {
+      
+      console.log(user);
+
+      return {
+        ...user.resale,
+        email: user.email,
+      }
+    });
+
+    
+    return response;
   }
 }
