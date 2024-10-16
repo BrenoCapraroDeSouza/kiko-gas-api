@@ -1,6 +1,6 @@
 import { FastifyRequest, FastifyReply } from "fastify";
 import { makeGetUserService } from "../../../service/factories/make-get-user-service";
-import { makeFetchGasCylinderService } from "../../../service/factories/make-fetch-gas-cylinder-service";
+import { makeFetchClientGasCylinderService } from "../../../service/factories/make-fetch-client-gas-cylinder-service";
 
 export interface QueryParams {
   page?: string;
@@ -26,7 +26,7 @@ export async function findAllGasCylinderClients(
 
   const clientId = user.client.id;
 
-  const fetchGasCylinderService = makeFetchGasCylinderService();
+  const fetchGasCylinderService = makeFetchClientGasCylinderService();
 
   try {
     const gasCylinders = await fetchGasCylinderService.execute({
