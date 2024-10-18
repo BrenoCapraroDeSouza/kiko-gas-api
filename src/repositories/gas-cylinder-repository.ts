@@ -6,13 +6,15 @@ export interface GasCylinderRepository {
   fetchAllByResaleId(
     resaleId: string,
     page?: number,
-    pageSize?: number
+    pageSize?: number,
+    orderBy?: "asc" | "desc"
   ): Promise<GasCylinder[]>;
 
   fetchAllByClientId(
     clientId: string,
     page?: number,
-    pageSize?: number
+    pageSize?: number,
+    orderBy?: "asc" | "desc"
   ): Promise<CustomerGasCylinder[]>;
 
   findById(id: string): Promise<GasCylinder | null>;

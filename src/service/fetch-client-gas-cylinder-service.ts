@@ -5,6 +5,7 @@ interface FetchClientGasCylinderRequest {
   clientId: string;
   page?: number;
   pageSize?: number;
+  orderBy?: "asc" | "desc";
 }
 
 export class FetchClientGasCylinderService {
@@ -17,7 +18,8 @@ export class FetchClientGasCylinderService {
       await this.gascylinderRepository.fetchAllByClientId(
         data.clientId,
         data.page || 1,
-        data.pageSize || 10
+        data.pageSize || 10,
+        data.orderBy
       );
 
     return gascylinder;
