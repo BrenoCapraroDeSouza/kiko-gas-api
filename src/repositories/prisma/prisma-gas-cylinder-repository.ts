@@ -13,24 +13,48 @@ export class GasCylinderRepository implements GasCylinderRepository {
   async fetchAllByResaleId(
     resaleId: string,
     page: number = 1,
-    pageSize: number = 10
+    pageSize: number = 10,
+    orderBy: "asc" | "desc" = "asc"
   ): Promise<GasCylinder[]> {
+
     const skip = (page - 1) * pageSize;
 
-    return await prisma.gasCylinder.findMany({
-      where: { resaleId: resaleId },
-      skip,
-      take: pageSize,
+    const gasCylinders = await prisma.gasCylinder.findMany({
+      where: { resaleId: resaleId }
     });
+
+    const sortedCylinders = gasCylinders.sort((a, b) => {
+      const numA = parseInt(a.name.slice(1));
+      const numB = parseInt(b.name.slice(1));
+      return orderBy === "asc" ? numA - numB : numB - numA;
+    });
+
+    return sortedCylinders.slice(skip, skip + pageSize);
   }
 
   async fetchAllByClientId(
     clientId: string,
     page: number = 1,
-    pageSize: number = 10
+    pageSize: number = 10,
+    orderBy: "asc" | "desc" = "asc"
   ): Promise<CustomerGasCylinder | null> {
-    return await prisma.customerGasCylinder.findUnique({
-      where: { clientId: clientId },
+    
+    const skip = (page - 1) * pageSize;
+    
+    const customerGasCylinder = await prisma.customerGasCylinder.findUnique({
+      where: { clientId: clientId }
     });
+
+    if (!customerGasCylinder) {
+      return null;
+    }
+
+    const sortedCylinders = customerGasCylinder.gasCylinders.sort((a, b) => {
+      const numA = parseInt(a.name.slice(1));
+      const numB = parseInt(b.name.slice(1));
+      return orderBy === "asc" ? numA - numB : numB - numA;
+    });
+
+    return sortedCylinders.slice(skip, skip + pageSize);
   }
 }
