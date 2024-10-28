@@ -76,6 +76,9 @@ model Signal {
   client    ClientInfo
   createdAt DateTime @default(now())
 
+  resaleId  String   @db.ObjectId
+
+  @@index([resaleId], name: "idx_resaleId")
   @@index([createdAt], name: "idx_createdAt")
 }
 
