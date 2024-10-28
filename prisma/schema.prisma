@@ -12,18 +12,37 @@ enum UserRole {
   CLIENT
 }
 
+enum SignalType {
+  COLLECTION
+  REPLENISHMENT
+  REQUEST
+}
+
+enum PaymentType {
+  PIX
+  MONEY
+}
+
+
 type Address {
+  id           String @db.ObjectId
   state        String
   city         String
   neighborhood String
   publicPlace  String
   number       String
   ie           String
+
+  createdAt    DateTime @default(now())       
+  updatedAt    DateTime @default(now())   
 }
 
 type ClientAddress {
+  id           String @db.ObjectId
   name    String
   address String
+  createdAt    DateTime @default(now())       
+  updatedAt    DateTime @default(now())   
 }
 
 type GasCylinderRef {
@@ -31,6 +50,16 @@ type GasCylinderRef {
   name        String
   description String
   price       Float
+}
+
+model Signal {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  type      SignalType
+  clientId  String   @db.ObjectId
+  client    Client   @relation(fields: [clientId], references: [id])
+  createdAt DateTime @default(now())
+
+  @@index([createdAt], name: "idx_createdAt")
 }
 
 model User {
@@ -54,6 +83,9 @@ model Resale {
   userId String @unique @db.ObjectId
 
   clients Client[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model Client {
@@ -73,6 +105,8 @@ model Client {
   updatedAt DateTime @updatedAt
 
   customerGasCylinder CustomerGasCylinder?
+
+  Signal Signal[]
 }
 
 model GasCylinder {
@@ -83,6 +117,9 @@ model GasCylinder {
   tare        Float
   weight      Float
   resaleId    String @db.ObjectId
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model CustomerGasCylinder {
