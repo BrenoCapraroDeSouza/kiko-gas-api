@@ -5,10 +5,11 @@ import { makeFetchGasCylinderService } from "../../../service/factories/make-fet
 export interface QueryParams {
   page?: string;
   pageSize?: string;
+  orderBy?: "asc" | "desc";
 }
 
 export async function findAll(request: FastifyRequest, response: FastifyReply) {
-  const { page, pageSize } = request.query as QueryParams;
+  const { page, pageSize, orderBy } = request.query as QueryParams;
 
   const userId = request.user.userId;
 
@@ -30,6 +31,7 @@ export async function findAll(request: FastifyRequest, response: FastifyReply) {
       resaleId,
       page: parseInt(page as any),
       pageSize: parseInt(pageSize as any),
+      orderBy,
     });
     response.status(200).send(gasCylinders);
   } catch (error) {

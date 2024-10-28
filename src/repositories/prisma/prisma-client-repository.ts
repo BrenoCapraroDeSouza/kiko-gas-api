@@ -33,6 +33,7 @@ export class PrismaClientRepository implements ClientRepository {
     let orderDirection: Prisma.SortOrder = "asc";
 
     if(orderBy === "desc") orderDirection = "desc";
+    
     return await prisma.client.findMany({
       where: { resaleId: resaleId },
       skip,
