@@ -37,6 +37,24 @@ type Address {
   updatedAt    DateTime @default(now())   
 }
 
+type ClientInfo {
+  id        String
+  name      String
+  cpfcnpj   String
+  phone     String
+  address   String
+  cylinder  CylinderInfo
+}
+
+type CylinderInfo {
+  id          String
+  name        String
+  description String
+  price       Float
+  paymentType PaymentType?
+  exchange    Float?
+}
+
 type ClientAddress {
   id           String @db.ObjectId
   name    String
@@ -55,12 +73,12 @@ type GasCylinderRef {
 model Signal {
   id        String   @id @default(auto()) @map("_id") @db.ObjectId
   type      SignalType
-  clientId  String   @db.ObjectId
-  client    Client   @relation(fields: [clientId], references: [id])
+  client    ClientInfo
   createdAt DateTime @default(now())
 
   @@index([createdAt], name: "idx_createdAt")
 }
+
 
 model User {
   id       String   @id @default(auto()) @map("_id") @db.ObjectId
@@ -105,8 +123,6 @@ model Client {
   updatedAt DateTime @updatedAt
 
   customerGasCylinder CustomerGasCylinder?
-
-  Signal Signal[]
 }
 
 model GasCylinder {
