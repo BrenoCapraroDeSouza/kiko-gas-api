@@ -25,7 +25,7 @@ enum PaymentType {
 
 
 type Address {
-  id           String @db.ObjectId
+  id           String? @db.ObjectId
   state        String
   city         String
   neighborhood String
@@ -33,8 +33,8 @@ type Address {
   number       String
   ie           String
 
-  createdAt    DateTime @default(now())       
-  updatedAt    DateTime @default(now())   
+  createdAt    DateTime? @default(now())       
+  updatedAt    DateTime? @default(now())   
 }
 
 type ClientInfo {
@@ -56,11 +56,11 @@ type CylinderInfo {
 }
 
 type ClientAddress {
-  id           String @db.ObjectId
+  id           String? @db.ObjectId
   name    String
   address String
-  createdAt    DateTime @default(now())       
-  updatedAt    DateTime @default(now())   
+  createdAt    DateTime? @default(now())       
+  updatedAt    DateTime? @default(now())   
 }
 
 type GasCylinderRef {
@@ -74,7 +74,7 @@ model Signal {
   id        String   @id @default(auto()) @map("_id") @db.ObjectId
   type      SignalType
   client    ClientInfo
-  createdAt DateTime @default(now())
+  createdAt DateTime? @default(now())
 
   resaleId  String   @db.ObjectId
 
@@ -105,8 +105,8 @@ model Resale {
 
   clients Client[]
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt DateTime? @default(now())
+  updatedAt DateTime? @updatedAt
 }
 
 model Client {
@@ -122,8 +122,8 @@ model Client {
   resale   Resale? @relation(fields: [resaleId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   resaleId String? @db.ObjectId
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt DateTime? @default(now())
+  updatedAt DateTime? @updatedAt
 
   customerGasCylinder CustomerGasCylinder?
 }
@@ -137,8 +137,8 @@ model GasCylinder {
   weight      Float
   resaleId    String @db.ObjectId
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt DateTime? @default(now())
+  updatedAt DateTime? @updatedAt
 }
 
 model CustomerGasCylinder {
