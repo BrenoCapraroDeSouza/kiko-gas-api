@@ -4,14 +4,18 @@ import { makeSendSignalService } from "../../../service/factories/make-send-sign
 
 export async function send(request: FastifyRequest, response: FastifyReply) {
   const SignalTypeEnum = z.enum(["COLLECTION", "REPLENISHMENT", "REQUEST"]);
-  const PaymentTypeEnum = z.enum(["PIX", "MONEY"]).nullable();
+  const PaymentTypeEnum = z.enum(["PIX", "MONEY"]);
+  const PaymentTypeSchema = z.union([PaymentTypeEnum, z.null()]);
 
   const CylinderRequestSchema = z.object({
     id: z.string().min(1),
     name: z.string().min(1),
     description: z.string().optional().default(""),
     price: z.number().min(0, "O preço deve ser maior ou igual a zero"),
-    paymentType: PaymentTypeEnum.nullable().optional().default(null),
+    paymentType: z.preprocess(
+      (val) => (val === undefined ? null : val),
+      PaymentTypeSchema
+    ),
     exchange: z.number().nullable().optional().default(null),
   });
 
@@ -31,6 +35,7 @@ export async function send(request: FastifyRequest, response: FastifyReply) {
 
   const data = registerSignalRequestSchema.safeParse(request.body);
 
+  console.log(data?.error);
   if (!data.success) {
     return response.status(400).send({ message: "Dados inválidos" });
   }
