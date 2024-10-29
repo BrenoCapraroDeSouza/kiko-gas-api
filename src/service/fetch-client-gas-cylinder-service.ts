@@ -1,5 +1,5 @@
 import { GasCylinderRepository } from "../repositories/gas-cylinder-repository";
-import { CustomerGasCylinder, GasCylinder } from "@prisma/client";
+import { CustomerGasCylinder } from "@prisma/client";
 
 interface FetchClientGasCylinderRequest {
   clientId: string;

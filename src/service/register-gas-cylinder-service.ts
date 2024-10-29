@@ -1,6 +1,6 @@
 import { GasCylinder } from "@prisma/client";
-import { GasCylinderRepository } from "../repositories/prisma/prisma-gas-cylinder-repository";
 import { UserRepository } from "../repositories/user-repository";
+import { GasCylinderRepository } from "../repositories/gas-cylinder-repository";
 
 interface RegisterGasCylinderRequest {
   name: string;
@@ -33,7 +33,7 @@ export class RegisterGasCylinderService {
       resaleId: resale.id,
       tare: 10,
     });
-    
+
     return gasCylinder;
   }
 }
