@@ -4,18 +4,20 @@ import { prisma } from "../../lib/prisma";
 
 export class PrismaUserRepository implements UserRepository {
   async create(data: Prisma.UserCreateInput): Promise<User> {
-    return prisma.user.create({ data });
+    return await prisma.user.create({ data });
   }
 
   async findByEmail(email: string): Promise<User | null> {
-    return prisma.user.findUnique({
+    const user = await prisma.user.findUnique({
       where: { email },
       include: { client: true, resale: true },
     });
+
+    return user;
   }
 
   async findById(id: string) {
-    return prisma.user.findUnique({
+    return await prisma.user.findUnique({
       where: { id },
       include: { client: true, resale: true },
     });
@@ -31,11 +33,11 @@ export class PrismaUserRepository implements UserRepository {
 
     let orderDirection: Prisma.SortOrder = "asc";
 
-    if(orderBy === "desc") { 
+    if (orderBy === "desc") {
       orderDirection = "desc";
     }
 
-    return prisma.user.findMany({
+    return await prisma.user.findMany({
       where: {
         role: "CLIENT",
         client: {
@@ -44,31 +46,31 @@ export class PrismaUserRepository implements UserRepository {
       },
       skip,
       take: pageSize,
-      orderBy: { 
+      orderBy: {
         client: {
-          createdAt: orderDirection 
-        }
+          createdAt: orderDirection,
+        },
       },
-      include: { 
-        client: true 
+      include: {
+        client: true,
       },
     });
   }
 
   async findAllResales(
     page: number = 1,
-    pageSize: number = 10,
+    pageSize: number = 10
   ): Promise<User[]> {
     const skip = (page - 1) * pageSize;
-    
-    return prisma.user.findMany({
+
+    return await prisma.user.findMany({
       where: {
         role: "RESALE",
       },
       skip,
       take: pageSize,
-      include: { 
-        resale: true 
+      include: {
+        resale: true,
       },
     });
   }
