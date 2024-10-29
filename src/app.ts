@@ -7,6 +7,7 @@ import { clientsRoutes } from "./http/controllers/clients/routes";
 import { usersRoute } from "./http/controllers/users/routes";
 import fastifyCors from "@fastify/cors";
 import { gasCylinderRoutes } from "./http/controllers/gas-cylinder/route";
+import { signalsRoutes } from "./http/controllers/signals/routes";
 
 export const app = fastify();
 
@@ -38,3 +39,4 @@ app.register(resalesRoutes);
 app.register(clientsRoutes);
 app.register(gasCylinderRoutes);
 app.register(usersRoute);
+app.register(signalsRoutes);

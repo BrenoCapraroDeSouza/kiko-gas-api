@@ -12,18 +12,55 @@ enum UserRole {
   CLIENT
 }
 
+enum SignalType {
+  COLLECTION
+  REPLENISHMENT
+  REQUEST
+}
+
+enum PaymentType {
+  PIX
+  MONEY
+}
+
+
 type Address {
+  id           String? @db.ObjectId
   state        String
   city         String
   neighborhood String
   publicPlace  String
   number       String
   ie           String
+
+  createdAt    DateTime? @default(now())       
+  updatedAt    DateTime? @default(now())   
+}
+
+type ClientInfo {
+  id        String
+  name      String
+  cpfcnpj   String
+  phone     String
+  address   String
+  cylinder  CylinderInfo
+}
+
+type CylinderInfo {
+  id          String
+  name        String
+  description String
+  price       Float
+  paymentType PaymentType?
+  exchange    Float?
 }
 
 type ClientAddress {
+  id           String? @db.ObjectId
   name    String
   address String
+  createdAt    DateTime? @default(now())       
+  updatedAt    DateTime? @default(now())   
 }
 
 type GasCylinderRef {
@@ -32,6 +69,19 @@ type GasCylinderRef {
   description String
   price       Float
 }
+
+model Signal {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  type      SignalType
+  client    ClientInfo
+  createdAt DateTime? @default(now())
+
+  resaleId  String   @db.ObjectId
+
+  @@index([resaleId], name: "idx_resaleId")
+  @@index([createdAt], name: "idx_createdAt")
+}
+
 
 model User {
   id       String   @id @default(auto()) @map("_id") @db.ObjectId
@@ -54,6 +104,9 @@ model Resale {
   userId String @unique @db.ObjectId
 
   clients Client[]
+
+  createdAt DateTime? @default(now())
+  updatedAt DateTime? @updatedAt
 }
 
 model Client {
@@ -69,8 +122,8 @@ model Client {
   resale   Resale? @relation(fields: [resaleId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   resaleId String? @db.ObjectId
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt DateTime? @default(now())
+  updatedAt DateTime? @updatedAt
 
   customerGasCylinder CustomerGasCylinder?
 }
@@ -83,6 +136,9 @@ model GasCylinder {
   tare        Float
   weight      Float
   resaleId    String @db.ObjectId
+
+  createdAt DateTime? @default(now())
+  updatedAt DateTime? @updatedAt
 }
 
 model CustomerGasCylinder {

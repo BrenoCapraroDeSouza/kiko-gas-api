@@ -1,7 +1,8 @@
 import { Prisma, GasCylinder, CustomerGasCylinder } from "@prisma/client";
 import { prisma } from "../../lib/prisma";
+import { GasCylinderRepository } from "../gas-cylinder-repository";
 
-export class GasCylinderRepository implements GasCylinderRepository {
+export class PrismaGasCylinderRepository implements GasCylinderRepository {
   register(data: Prisma.GasCylinderCreateInput): Promise<GasCylinder> {
     return prisma.gasCylinder.create({ data });
   }
@@ -16,11 +17,10 @@ export class GasCylinderRepository implements GasCylinderRepository {
     pageSize: number = 10,
     orderBy: "asc" | "desc" = "asc"
   ): Promise<GasCylinder[]> {
-
     const skip = (page - 1) * pageSize;
 
     const gasCylinders = await prisma.gasCylinder.findMany({
-      where: { resaleId: resaleId }
+      where: { resaleId: resaleId },
     });
 
     const sortedCylinders = gasCylinders.sort((a, b) => {
@@ -37,16 +37,15 @@ export class GasCylinderRepository implements GasCylinderRepository {
     page: number = 1,
     pageSize: number = 10,
     orderBy: "asc" | "desc" = "asc"
-  ): Promise<CustomerGasCylinder | null> {
-    
+  ): Promise<CustomerGasCylinder[]> {
     const skip = (page - 1) * pageSize;
-    
+
     const customerGasCylinder = await prisma.customerGasCylinder.findUnique({
-      where: { clientId: clientId }
+      where: { clientId: clientId },
     });
 
     if (!customerGasCylinder) {
-      return null;
+      return [];
     }
 
     const sortedCylinders = customerGasCylinder.gasCylinders.sort((a, b) => {

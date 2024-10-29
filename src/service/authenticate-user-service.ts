@@ -22,6 +22,7 @@ export class AuthenticateUserService {
     }
 
     const isPasswordValid = await bcrypt.compare(data.password, user.password);
+
     if (!isPasswordValid) {
       throw new Error("Senha inválida");
     }
