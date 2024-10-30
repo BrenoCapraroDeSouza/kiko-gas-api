@@ -6,8 +6,8 @@ import { resalesRoutes } from "./http/controllers/resales/routes";
 import { clientsRoutes } from "./http/controllers/clients/routes";
 import { usersRoute } from "./http/controllers/users/routes";
 import fastifyCors from "@fastify/cors";
-import { gasCylinderRoutes } from "./http/controllers/gas-cylinder/route";
 import { signalsRoutes } from "./http/controllers/signals/routes";
+import { gasCylinderRoutes } from "./http/controllers/gas-cylinder/routes";
 
 export const app = fastify();
 
