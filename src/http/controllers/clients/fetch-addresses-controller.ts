@@ -2,14 +2,7 @@ import { FastifyReply, FastifyRequest } from "fastify";
 import { makeFetchClientAddressesService } from "../../../service/factories/make-fetch-client-addresses-service";
 import { makeGetUserService } from "../../../service/factories/make-get-user-service";
 
-export interface QueryParams {
-    page?: string;
-    pageSize?: string;
-    orderBy?: "asc" | "desc";
-}
-
 export async function fetchAddresses(request: FastifyRequest, response: FastifyReply) {
-    // const { page, pageSize, orderBy } = request.query as QueryParams;
 
     const userId = request.user.userId;
 
