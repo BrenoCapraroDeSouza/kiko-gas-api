@@ -23,7 +23,6 @@ enum PaymentType {
   MONEY
 }
 
-
 type Address {
   id           String? @db.ObjectId
   state        String
@@ -33,17 +32,17 @@ type Address {
   number       String
   ie           String
 
-  createdAt    DateTime? @default(now())       
-  updatedAt    DateTime? @default(now())   
+  createdAt DateTime? @default(now())
+  updatedAt DateTime? @default(now())
 }
 
 type ClientInfo {
-  id        String
-  name      String
-  cpfcnpj   String
-  phone     String
-  address   String
-  cylinder  CylinderInfo
+  id       String
+  name     String
+  cpfcnpj  String
+  phone    String
+  address  String
+  cylinder CylinderInfo
 }
 
 type CylinderInfo {
@@ -56,11 +55,11 @@ type CylinderInfo {
 }
 
 type ClientAddress {
-  id           String? @db.ObjectId
-  name    String
-  address String
-  createdAt    DateTime? @default(now())       
-  updatedAt    DateTime? @default(now())   
+  id        String?   @db.ObjectId
+  name      String
+  address   String
+  createdAt DateTime? @default(now())
+  updatedAt DateTime? @default(now())
 }
 
 type GasCylinderRef {
@@ -71,17 +70,16 @@ type GasCylinderRef {
 }
 
 model Signal {
-  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  id        String     @id @default(auto()) @map("_id") @db.ObjectId
   type      SignalType
   client    ClientInfo
-  createdAt DateTime? @default(now())
+  createdAt DateTime?  @default(now())
 
-  resaleId  String   @db.ObjectId
+  resaleId String @db.ObjectId
 
   @@index([resaleId], name: "idx_resaleId")
   @@index([createdAt], name: "idx_createdAt")
 }
-
 
 model User {
   id       String   @id @default(auto()) @map("_id") @db.ObjectId

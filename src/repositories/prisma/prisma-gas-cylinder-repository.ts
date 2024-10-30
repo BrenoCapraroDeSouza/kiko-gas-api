@@ -56,4 +56,16 @@ export class PrismaGasCylinderRepository implements GasCylinderRepository {
 
     return sortedCylinders.slice(skip, skip + pageSize);
   }
+
+  async updateGasCylinder(
+    id: string, 
+    data: Prisma.GasCylinderUpdateInput
+  ): Promise<GasCylinder> {
+    return prisma.gasCylinder.update({ 
+      where: { 
+        id 
+      }, 
+      data 
+    });
+  }
 }

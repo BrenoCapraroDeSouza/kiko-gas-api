@@ -53,6 +53,7 @@ export class PrismaClientRepository implements ClientRepository {
       data: {
         addresses: {
           push: {
+            id: addressData.id,
             name: addressData.name,
             address: addressData.address,
           }
@@ -74,6 +75,12 @@ export class PrismaClientRepository implements ClientRepository {
     if (!client) {
       throw new Error("Client not found");
     }
+
+    // const sortedAddresses = client.addresses.sort((a, b) => {
+    //   return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+    // });
+  
+    // return sortedAddresses;
 
     return client.addresses;
   }

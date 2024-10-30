@@ -4,6 +4,7 @@ import { verifyUserType } from "../../middlewares/verify-user-type";
 import { register } from "./register-controller";
 import { findAll } from "./fetch-controller";
 import { findAllGasCylinderClients } from "./fetch-clients-controller";
+import { updateGasCylinder } from "./update-controller";
 
 export async function gasCylinderRoutes(app: FastifyInstance) {
   app.post(
@@ -19,4 +20,5 @@ export async function gasCylinderRoutes(app: FastifyInstance) {
   );
 
   app.get("/gas/client", { onRequest: [verifyJWT] }, findAllGasCylinderClients);
+  app.patch("/gas/:id", { onRequest: [verifyJWT, verifyUserType("RESALE")] }, updateGasCylinder);
 }

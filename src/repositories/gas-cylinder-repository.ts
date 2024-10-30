@@ -18,4 +18,5 @@ export interface GasCylinderRepository {
   ): Promise<CustomerGasCylinder[]>;
 
   findById(id: string): Promise<GasCylinder | null>;
+  updateGasCylinder(id: string, data: Prisma.GasCylinderUpdateInput): Promise<GasCylinder>;
 }
