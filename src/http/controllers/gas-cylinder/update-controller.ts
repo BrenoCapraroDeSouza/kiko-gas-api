@@ -14,6 +14,7 @@ export async function updateGasCylinder(
         name: z.string().optional(),
         description: z.string().optional(),
         price: z.number().optional(),
+        weight: z.number().optional(),
     });
 
     const userId = request.user?.userId;
