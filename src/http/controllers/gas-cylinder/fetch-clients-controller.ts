@@ -8,24 +8,13 @@ export interface QueryParams {
   orderBy?: "asc" | "desc";
 }
 
-export async function findAllGasCylinderClients(
+export async function findAllClientGasById(
   request: FastifyRequest,
   response: FastifyReply
 ) {
   const { page, pageSize, orderBy } = request.query as QueryParams;
 
-  const userId = request.user.userId;
-
-  const getUserService = makeGetUserService();
-
-  const user = await getUserService.execute({ userId });
-
-  if (!user) return response.code(404).send({ message: "User not found" });
-
-  if (!user.client)
-    return response.code(404).send({ message: "Client not found for user" });
-
-  const clientId = user.client.id;
+  const clientId = request.params.id;
 
   const fetchGasCylinderService = makeFetchClientGasCylinderService();
 
@@ -36,6 +25,7 @@ export async function findAllGasCylinderClients(
       pageSize: parseInt(pageSize as any),
       orderBy,
     });
+    
     response.status(200).send(gasCylinders);
   } catch (error) {
     response.code(500).send({ message: error.message });
