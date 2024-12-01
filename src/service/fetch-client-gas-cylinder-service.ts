@@ -9,19 +9,19 @@ interface FetchClientGasCylinderRequest {
 }
 
 export class FetchClientGasCylinderService {
-  constructor(private gascylinderRepository: GasCylinderRepository) {}
+  constructor(private gasCylinderRepository: GasCylinderRepository) {}
 
   async execute(
     data: FetchClientGasCylinderRequest
   ): Promise<CustomerGasCylinder[]> {
-    const gascylinder: CustomerGasCylinder[] =
-      await this.gascylinderRepository.fetchAllByClientId(
+    const customerGasCylinder: CustomerGasCylinder[] =
+      await this.gasCylinderRepository.fetchAllClientGasById(
         data.clientId,
         data.page || 1,
         data.pageSize || 10,
         data.orderBy
       );
 
-    return gascylinder;
+    return customerGasCylinder;
   }
 }
