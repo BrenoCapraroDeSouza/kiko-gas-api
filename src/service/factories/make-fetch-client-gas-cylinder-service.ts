@@ -3,7 +3,6 @@ import { FetchClientGasCylinderService } from "../fetch-client-gas-cylinder-serv
 
 export function makeFetchClientGasCylinderService(): FetchClientGasCylinderService {
   const gasCylinderRepository = new PrismaGasCylinderRepository();
-
   const service = new FetchClientGasCylinderService(gasCylinderRepository);
 
   return service;
