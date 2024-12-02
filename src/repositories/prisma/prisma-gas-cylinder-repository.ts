@@ -7,6 +7,34 @@ export class PrismaGasCylinderRepository implements GasCylinderRepository {
     return prisma.gasCylinder.create({ data });
   }
 
+  async setGasCylindersAddress(
+    addressId: string,
+    cylinderId: string,
+    clientId: string
+  ): Promise<CustomerGasCylinder> {
+    const customerGasCylinder = await prisma.customerGasCylinder.findUnique({
+      where: { clientId },
+      include: { gasCylinders: true },
+    });
+
+    if (!customerGasCylinder) {
+      throw new Error("Cliente não encontrado");
+    }
+
+    const updatedCylinders = customerGasCylinder.gasCylinders.map((cylinder) =>
+      cylinder.id === cylinderId ? { ...cylinder, addressId } : cylinder
+    );
+
+    const updatedGasCylinder = await prisma.customerGasCylinder.update({
+      where: { clientId },
+      data: {
+        gasCylinders: updatedCylinders,
+      },
+    });
+
+    return updatedGasCylinder;
+  }
+
   async findById(id: string): Promise<GasCylinder | null> {
     return prisma.gasCylinder.findUnique({ where: { id } });
   }
@@ -53,7 +81,10 @@ export class PrismaGasCylinderRepository implements GasCylinderRepository {
     return customerGasCylinder;
   }
 
-  async findGasByAddressId(addressId: string, clientId: string): Promise<CustomerGasCylinder | null> {
+  async findGasByAddressId(
+    addressId: string,
+    clientId: string
+  ): Promise<CustomerGasCylinder | null> {
     const customerGasCylinder = await prisma.customerGasCylinder.findMany({
       where: {
         clientId: clientId,
@@ -62,7 +93,7 @@ export class PrismaGasCylinderRepository implements GasCylinderRepository {
         gasCylinders: true,
       },
     });
-  
+
     if (!customerGasCylinder || customerGasCylinder.length === 0) {
       return null;
     }
@@ -70,12 +101,12 @@ export class PrismaGasCylinderRepository implements GasCylinderRepository {
     const filteredGasCylinders = customerGasCylinder[0].gasCylinders.filter(
       (gasCylinder) => gasCylinder.addressId === addressId
     );
-  
+
     return filteredGasCylinders.length > 0 ? filteredGasCylinders : null;
   }
-  
+
   async updateGasCylinder(
-    id: string, 
+    id: string,
     data: Prisma.GasCylinderUpdateInput
   ): Promise<GasCylinder> {
     const addressWithClientGas = await prisma.customerGasCylinder.findUnique({

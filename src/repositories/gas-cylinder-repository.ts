@@ -3,6 +3,12 @@ import { Prisma, GasCylinder, CustomerGasCylinder } from "@prisma/client";
 export interface GasCylinderRepository {
   register(data: Prisma.GasCylinderCreateInput): Promise<GasCylinder>;
 
+  setGasCylindersAddress(
+    addressId: string,
+    cylinderId: string,
+    clientId: string
+  ): Promise<CustomerGasCylinder>;
+
   fetchAllByResaleId(
     resaleId: string,
     page?: number,
@@ -22,12 +28,10 @@ export interface GasCylinderRepository {
     clientId: string
   ): Promise<CustomerGasCylinder | null>;
 
-  findById(
-    id: string
-  ): Promise<GasCylinder | null>;
+  findById(id: string): Promise<GasCylinder | null>;
 
   updateGasCylinder(
-    id: string, 
+    id: string,
     data: Prisma.GasCylinderUpdateInput
   ): Promise<GasCylinder>;
 }
