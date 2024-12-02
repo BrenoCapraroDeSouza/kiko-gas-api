@@ -10,13 +10,23 @@ export interface GasCylinderRepository {
     orderBy?: "asc" | "desc"
   ): Promise<GasCylinder[]>;
 
-  fetchAllByClientId(
+  fetchAllClientGasById(
     clientId: string,
     page?: number,
     pageSize?: number,
     orderBy?: "asc" | "desc"
   ): Promise<CustomerGasCylinder[]>;
 
-  findById(id: string): Promise<GasCylinder | null>;
-  updateGasCylinder(id: string, data: Prisma.GasCylinderUpdateInput): Promise<GasCylinder>;
+  findGasByAddressId(
+    id: string
+  ): Promise<CustomerGasCylinder | null>;
+
+  findById(
+    id: string
+  ): Promise<GasCylinder | null>;
+
+  updateGasCylinder(
+    id: string, 
+    data: Prisma.GasCylinderUpdateInput
+  ): Promise<GasCylinder>;
 }

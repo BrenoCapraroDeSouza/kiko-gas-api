@@ -32,7 +32,7 @@ export class PrismaGasCylinderRepository implements GasCylinderRepository {
     return sortedCylinders.slice(skip, skip + pageSize);
   }
 
-  async fetchAllByClientId(
+  async fetchAllClientGasById(
     clientId: string,
     page: number = 1,
     pageSize: number = 10,
@@ -40,32 +40,29 @@ export class PrismaGasCylinderRepository implements GasCylinderRepository {
   ): Promise<CustomerGasCylinder[]> {
     const skip = (page - 1) * pageSize;
 
-    const customerGasCylinder = await prisma.customerGasCylinder.findUnique({
-      where: { clientId: clientId },
+    const customerGasCylinder = await prisma.customerGasCylinder.findMany({
+      where: {
+        clientId: clientId,
+      },
     });
 
     if (!customerGasCylinder) {
       return [];
     }
 
-    const sortedCylinders = customerGasCylinder.gasCylinders.sort((a, b) => {
-      const numA = parseInt(a.name.slice(1));
-      const numB = parseInt(b.name.slice(1));
-      return orderBy === "asc" ? numA - numB : numB - numA;
-    });
+    return customerGasCylinder;
+  }
 
-    return sortedCylinders.slice(skip, skip + pageSize);
+  async findGasByAddressId(id: string): Promise<CustomerGasCylinder | null> {
+    return null; //to be implemented
   }
 
   async updateGasCylinder(
     id: string, 
     data: Prisma.GasCylinderUpdateInput
   ): Promise<GasCylinder> {
-    return prisma.gasCylinder.update({ 
-      where: { 
-        id 
-      }, 
-      data 
+    const addressWithClientGas = await prisma.customerGasCylinder.findUnique({
+      where: { id },
     });
   }
 }
