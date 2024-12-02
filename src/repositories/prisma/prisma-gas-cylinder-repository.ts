@@ -53,10 +53,27 @@ export class PrismaGasCylinderRepository implements GasCylinderRepository {
     return customerGasCylinder;
   }
 
-  async findGasByAddressId(id: string): Promise<CustomerGasCylinder | null> {
-    return null; //to be implemented
-  }
+  async findGasByAddressId(addressId: string, clientId: string): Promise<CustomerGasCylinder | null> {
+    const customerGasCylinder = await prisma.customerGasCylinder.findMany({
+      where: {
+        clientId: clientId,
+      },
+      select: {
+        gasCylinders: true,
+      },
+    });
+  
+    if (!customerGasCylinder || customerGasCylinder.length === 0) {
+      return null;
+    }
 
+    const filteredGasCylinders = customerGasCylinder[0].gasCylinders.filter(
+      (gasCylinder) => gasCylinder.addressId === addressId
+    );
+  
+    return filteredGasCylinders.length > 0 ? filteredGasCylinders : null;
+  }
+  
   async updateGasCylinder(
     id: string, 
     data: Prisma.GasCylinderUpdateInput
