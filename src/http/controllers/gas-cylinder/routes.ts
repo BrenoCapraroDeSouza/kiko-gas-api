@@ -5,6 +5,7 @@ import { register } from "./register-controller";
 import { findAll } from "./fetch-controller";
 import { findAllClientGasById } from "./fetch-clients-controller";
 import { updateGasCylinder } from "./update-controller";
+import { findGasByAddressId } from "./find-gas-by-address-controller";
 
 export async function gasCylinderRoutes(app: FastifyInstance) {
   app.post(
@@ -23,6 +24,12 @@ export async function gasCylinderRoutes(app: FastifyInstance) {
     "/gas/client/:id", 
     { onRequest: [verifyJWT, verifyUserType("RESALE")] }, 
     findAllClientGasById
+  );
+
+  app.get(
+    "/address/gas/:id", 
+    { onRequest: [verifyJWT] }, 
+    findGasByAddressId
   );
 
   app.patch(

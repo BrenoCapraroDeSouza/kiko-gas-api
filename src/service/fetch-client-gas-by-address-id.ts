@@ -2,7 +2,8 @@ import { GasCylinderRepository } from "../repositories/gas-cylinder-repository";
 import { CustomerGasCylinder } from "@prisma/client";
 
 interface FetchClientGasCylinderRequest {
-  id: string;
+  addressId: string;
+  clientId: string;
 }
 
 export class FetchClientGasByAddressService {
@@ -12,7 +13,8 @@ export class FetchClientGasByAddressService {
     data: FetchClientGasCylinderRequest
   ): Promise<CustomerGasCylinder[]> {
     const customerGasCylinder = await this.gasCylinderRepository.findGasByAddressId(
-      data.id,
+      data.addressId,
+      data.clientId
     ) || [];
 
     return customerGasCylinder as any;

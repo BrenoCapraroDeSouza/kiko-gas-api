@@ -18,7 +18,8 @@ export interface GasCylinderRepository {
   ): Promise<CustomerGasCylinder[]>;
 
   findGasByAddressId(
-    id: string
+    addressId: string,
+    clientId: string
   ): Promise<CustomerGasCylinder | null>;
 
   findById(
