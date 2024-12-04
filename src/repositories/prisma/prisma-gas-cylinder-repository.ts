@@ -109,8 +109,17 @@ export class PrismaGasCylinderRepository implements GasCylinderRepository {
     id: string,
     data: Prisma.GasCylinderUpdateInput
   ): Promise<GasCylinder> {
-    const addressWithClientGas = await prisma.customerGasCylinder.findUnique({
+    const addressWithClientGas = await prisma.gasCylinder.findUnique({
       where: { id },
+    });
+
+    if (!addressWithClientGas) {
+      throw new Error("Gas cylinder not found");
+    }
+
+    return prisma.gasCylinder.update({
+      where: { id },
+      data,
     });
   }
 }
