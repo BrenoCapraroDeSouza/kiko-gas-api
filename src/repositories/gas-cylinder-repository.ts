@@ -9,6 +9,14 @@ export interface GasCylinderRepository {
     clientId: string
   ): Promise<CustomerGasCylinder>;
 
+  setNewCustomerGasCylinder(
+    clientId: string,
+    addressId: string,
+    name: string,
+    description?: string,
+    price?: number,
+  ): Promise<CustomerGasCylinder[]>;
+
   fetchAllByResaleId(
     resaleId: string,
     page?: number,
