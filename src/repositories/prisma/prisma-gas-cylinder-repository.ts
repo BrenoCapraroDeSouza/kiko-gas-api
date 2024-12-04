@@ -1,6 +1,7 @@
 import { Prisma, GasCylinder, CustomerGasCylinder } from "@prisma/client";
 import { prisma } from "../../lib/prisma";
 import { GasCylinderRepository } from "../gas-cylinder-repository";
+import { ObjectId } from "mongodb";
 
 export class PrismaGasCylinderRepository implements GasCylinderRepository {
   register(data: Prisma.GasCylinderCreateInput): Promise<GasCylinder> {
@@ -33,6 +34,39 @@ export class PrismaGasCylinderRepository implements GasCylinderRepository {
     });
 
     return updatedGasCylinder;
+  }
+
+  async setNewCustomerGasCylinder(
+    clientId: string, 
+    addressId: string, 
+    name: string, 
+    description: string, 
+    price: number
+  ): Promise<CustomerGasCylinder[]> {
+    const customerGasCylinder = await prisma.customerGasCylinder.findUnique({
+      where: { clientId },
+    });
+
+    if (!customerGasCylinder) {
+      throw new Error("Cliente não encontrado");
+    }
+    
+    const newGasCylinder = {
+      id: new ObjectId(),
+      name,
+      description,
+      addressId,
+      price,
+    };
+  
+    const updatedCustomerGasCylinder = await prisma.customerGasCylinder.update({
+      where: { clientId },
+      data: {
+        gasCylinders: [...customerGasCylinder.gasCylinders, newGasCylinder],
+      },
+    });
+  
+    return updatedCustomerGasCylinder;
   }
 
   async findById(id: string): Promise<GasCylinder | null> {
